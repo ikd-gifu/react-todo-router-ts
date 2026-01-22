@@ -1,12 +1,9 @@
+import { TodoCreateTemplate } from '../../components/templates';
+
 /**
  * Todo新規作成ページ
- * titleとcontentの入力フォームを提供
+ * TodoCreateTemplateを使用してフォームを表示
  */
 export const TodoCreatePage = () => {
-  return (
-    <div>
-      <h1>Todo新規作成ページ</h1>
-      <p>Phase 3でフォーム実装予定</p>
-    </div>
-  );
+  return <TodoCreateTemplate />;
 };
