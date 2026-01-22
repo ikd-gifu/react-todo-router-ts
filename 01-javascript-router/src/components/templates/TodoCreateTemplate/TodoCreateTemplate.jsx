@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { InputForm, CommonTextArea, CommonButton } from '../../atoms';
+import { BasicLayout } from '../../organisms';
 import { NAV_ITEMS } from '../../../constants/navigation';
 import styles from './style.module.css';
 
@@ -30,9 +31,7 @@ export const TodoCreateTemplate = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Todo新規作成</h1>
-      
+    <BasicLayout title="Todo新規作成">
       <div className={styles.formGroup}>
         <InputForm
           inputValue={title}
@@ -55,6 +54,6 @@ export const TodoCreateTemplate = () => {
           作成
         </CommonButton>
       </div>
-    </div>
+    </BasicLayout>
   );
 };

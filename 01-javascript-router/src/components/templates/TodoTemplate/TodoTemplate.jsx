@@ -1,7 +1,7 @@
 // 単一責任	Template = ロジック・状態管理、Organisms = レイアウト、Atoms: 純粋なUI部品
 // Container/Presentational パターンとも呼ばれる
 import styles from "./style.module.css";
-import { TodoList } from "../../organisms/";
+import { BasicLayout, TodoList } from "../../organisms/";
 import { InputForm } from "../../atoms";
 import { useTodoContext } from "../../../hooks/useTodoContext";
 
@@ -18,9 +18,7 @@ export const TodoTemplate = () => {
   } = useTodoContext();
 
   return (
-    // 各コンポーネントにpropsとして渡す
-    <div className={styles.container}>
-      <h1 className={styles.title}>Todo アプリ</h1>
+    <BasicLayout title="Todo アプリ">
       {/* Todo検索フォームエリア */}
       <section className={styles.common}>
         <InputForm
@@ -37,6 +35,6 @@ export const TodoTemplate = () => {
           handleDeleteTodo={handleDeleteTodo}
         />
       </section>
-    </div>
+    </BasicLayout>
   );
 };
