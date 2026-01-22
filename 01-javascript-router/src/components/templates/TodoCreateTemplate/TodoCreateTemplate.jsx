@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
-import { InputForm, CommonTextArea } from '../../atoms';
+import { InputForm, CommonTextArea, CommonButton } from '../../atoms';
 import { NAV_ITEMS } from '../../../constants/navigation';
 import styles from './style.module.css';
 
@@ -51,9 +51,9 @@ export const TodoCreateTemplate = () => {
       </div>
 
       <div className={styles.buttonGroup}>
-        <button className={styles.createButton} onClick={onClickCreate}>
+        <CommonButton onClick={onClickCreate}>
           作成
-        </button>
+        </CommonButton>
       </div>
     </div>
   );
