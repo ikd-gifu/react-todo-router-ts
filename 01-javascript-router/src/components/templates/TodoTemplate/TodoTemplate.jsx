@@ -3,19 +3,18 @@
 import styles from "./style.module.css";
 import { BasicLayout, TodoList } from "../../organisms/";
 import { InputForm } from "../../atoms";
-import { useTodoContext } from "../../../hooks/useTodoContext";
+import { useTodoTemplate } from "./useTodoTemplate";
 
-// 全ての状態を管理
-// originTodoListは複数のコンポーネントで使われる
-// → 親（TodoTemplate）で管理する
+// ページ固有のUI状態を管理
+// 検索機能など、表示に関わる一時的な状態
 export const TodoTemplate = () => {
-  // カスタムフックuseTodoを使って状態管理を分離
+  // ページ固有のカスタムフックでUI状態を管理
   const {
-    showTodoList, // 状態
     searchInputValue,
-    handleDeleteTodo, // 関数
-    setSearchInputValue
-  } = useTodoContext();
+    setSearchInputValue,
+    showTodoList,
+    handleDeleteTodo,
+  } = useTodoTemplate();
 
   return (
     <BasicLayout title="Todo アプリ">

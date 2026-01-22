@@ -1,6 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { INITIAL_TODOS, INITIAL_UNIQUE_ID } from "../constants/data";
 
+/**
+ * Todoのグローバル状態管理とCRUD操作
+ * データの永続化に関わる処理のみを担当
+ * Single Source of Truthとしてデータモデルを管理
+ */
 export const useTodo = () => {
   // todo listの状態管理
   // const [現在の値, 値を更新するための関数] = useState(初期値);
@@ -8,16 +13,6 @@ export const useTodo = () => {
   // 重複しない ID を生成
   // const [uniqueId, setUniqueId] = useState(INITIAL_TODOS.length + 1); データはdata.jsで一元管理
   const [uniqueId, setUniqueId] = useState(INITIAL_UNIQUE_ID);
-    // 検索用のキーワードの状態管理 初期値を空文字に設定
-  const [searchInputValue, setSearchInputValue] = useState("");
-  // 検索用の入力値に基づいて表示するTodoリストを絞り込む
-  const showTodoList = useMemo(() => {
-    return originalTodoList.filter((todo) =>
-      // 検索キーワードに前方一致したTodoだけを一覧表示
-      todo.title.toLowerCase().startsWith(searchInputValue.toLowerCase())
-    );
-  // originalTodoListかsearchInputValueが変化したときに再計算
-  }, [originalTodoList, searchInputValue]);
 
   /**
    * Todo新規作成処理（フォームからの登録用）
@@ -57,10 +52,8 @@ export const useTodo = () => {
   };
 
   return {
-    showTodoList, // 状態
-    searchInputValue,
-    handleDeleteTodo, // 関数
+    originalTodoList, // データソース
     handleCreateTodo, // 新規作成処理（フォームから登録用）
-    setSearchInputValue
+    handleDeleteTodo, // 削除処理
   };
 };

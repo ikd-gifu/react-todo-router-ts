@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTodoContext } from '../../../hooks/useTodoContext';
+import { useTodoCreateTemplate } from './useTodoCreateTemplate';
 import { InputForm, CommonTextArea, CommonButton } from '../../atoms';
 import { BasicLayout } from '../../organisms';
-import { NAV_ITEMS } from '../../../constants/navigation';
 import styles from './style.module.css';
 
 /**
@@ -11,24 +8,14 @@ import styles from './style.module.css';
  * titleとcontentの入力フォームを提供
  */
 export const TodoCreateTemplate = () => {
-  const navigate = useNavigate();
-  const { handleCreateTodo } = useTodoContext();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-
-  /**
-   * Todo作成処理
-   */
-  const onClickCreate = () => {
-    if (title.trim() === '') {
-      alert('タイトルを入力してください');
-      return;
-    }
-
-    handleCreateTodo(title, content);
-    // 一覧画面に遷移
-    navigate(NAV_ITEMS.TOP);
-  };
+  // ページ固有のカスタムフックでフォーム状態を管理
+  const {
+    title,
+    setTitle,
+    content,
+    setContent,
+    onClickCreate,
+  } = useTodoCreateTemplate();
 
   return (
     <BasicLayout title="Todo新規作成">

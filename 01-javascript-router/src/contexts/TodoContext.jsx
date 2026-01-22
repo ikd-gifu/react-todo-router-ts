@@ -18,23 +18,20 @@ export { TodoContext };
  */
 export const TodoProvider = ({ children }) => {
   // カスタムフックから状態と関数を取得し、Contextで提供する
+  // リファクタリング後: CRUD操作のみを提供
   const {
-    showTodoList, // 状態
-    searchInputValue,
-    handleDeleteTodo, // 関数
+    originalTodoList, // データソース
     handleCreateTodo, // 新規作成関数
-    setSearchInputValue
+    handleDeleteTodo, // 削除関数
   } = useTodo();
 
   return (
     // <TodoTemplate /> がレンダリングされる
     <TodoContext.Provider
       value={{
-        showTodoList, // 状態
-        searchInputValue,
-        handleDeleteTodo, // 関数
+        originalTodoList, // データソース
         handleCreateTodo, // 新規作成関数
-        setSearchInputValue
+        handleDeleteTodo, // 削除関数
       }}>
         {/*  このProviderでラップされた子コンポーネント全体 <Router /> */}
         {children}
