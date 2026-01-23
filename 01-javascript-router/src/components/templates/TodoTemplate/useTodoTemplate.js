@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useTodoContext } from "../../../hooks/useTodoContext";
 
 /**
@@ -9,11 +9,20 @@ import { useTodoContext } from "../../../hooks/useTodoContext";
 export const useTodoTemplate = () => {
   const { originalTodoList, handleDeleteTodo } = useTodoContext();
   
-  // 検索用のキーワードの状態管理 初期値を空文字に設定
-  // useStateから返されるセッター関数は自動的にメモ化されている
+  // 検索用のキーワードの状態管理（初期値は空文字）
   const [searchInputValue, setSearchInputValue] = useState("");
 
-  // 検索用の入力値に基づいて表示するTodoリストを絞り込む
+  /**
+   * 検索キーワード更新処理
+   * @param {Event} e - 入力イベント
+   */
+  const onChangeSearchInputValue = useCallback(
+    (e) => setSearchInputValue(e.target.value),
+    []
+  );
+
+  // 検索キーワードに基づいて表示するTodoリストを絞り込む
+  // useMemoで派生状態を最適化
   const showTodoList = useMemo(() => {
     return originalTodoList.filter((todo) =>
       // 検索キーワードに前方一致したTodoだけを一覧表示
@@ -24,8 +33,8 @@ export const useTodoTemplate = () => {
 
   return {
     searchInputValue,
-    setSearchInputValue,
     showTodoList,
     handleDeleteTodo,
+    onChangeSearchInputValue,
   };
 };
