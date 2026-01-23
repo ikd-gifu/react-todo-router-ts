@@ -10,6 +10,7 @@ export const useTodoTemplate = () => {
   const { originalTodoList, handleDeleteTodo } = useTodoContext();
   
   // 検索用のキーワードの状態管理 初期値を空文字に設定
+  // useStateから返されるセッター関数は自動的にメモ化されている
   const [searchInputValue, setSearchInputValue] = useState("");
 
   // 検索用の入力値に基づいて表示するTodoリストを絞り込む

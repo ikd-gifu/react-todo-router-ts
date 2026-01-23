@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { NAV_ITEMS } from '../../../constants/navigation';
@@ -20,7 +20,7 @@ export const useTodoCreateTemplate = () => {
    * Todo作成処理
    * バリデーションを行い、問題なければデータを保存して一覧画面に遷移
    */
-  const onClickCreate = () => {
+  const onClickCreate = useCallback(() => {
     // バリデーション: タイトルが空の場合はアラート表示
     if (title.trim() === '') {
       alert('タイトルを入力してください');
@@ -32,7 +32,7 @@ export const useTodoCreateTemplate = () => {
     
     // 一覧画面に遷移
     navigate(NAV_ITEMS.TOP);
-  };
+  }, [title, content, handleCreateTodo, navigate]);
 
   return {
     title,

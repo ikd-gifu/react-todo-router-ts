@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { INITIAL_TODOS, INITIAL_UNIQUE_ID } from "../constants/data";
 
 /**
@@ -19,7 +19,7 @@ export const useTodo = () => {
    * @param {string} title - Todoのタイトル
    * @param {string} content - Todoの内容
    */
-  const handleCreateTodo = (title, content = "") => {
+  const handleCreateTodo = useCallback((title, content = "") => {
     const nextId = uniqueId + 1;
     
     const newTodoList = [
@@ -33,14 +33,14 @@ export const useTodo = () => {
     
     setOriginalTodoList(newTodoList);
     setUniqueId(nextId);
-  };
+  }, [uniqueId, originalTodoList]);
 
   // Todo削除処理 @param は /**  */ のJSDocコメント内で使う
   /**
   * @param {number} targetId - 削除対象のTodoのID
   * @param {string} targetTitle - 削除対象のTodoのタイトル
   */
-  const handleDeleteTodo = (targetId, targetTitle) => {
+  const handleDeleteTodo = useCallback((targetId, targetTitle) => {
     // 確認ダイアログを表示
     if (window.confirm(`「${targetTitle}」を削除しますか？`)) {
       // 削除対象のID以外のTodoだけを残す
@@ -49,7 +49,7 @@ export const useTodo = () => {
       // 状態を更新
       setOriginalTodoList(newTodoList);
     }
-  };
+  }, [originalTodoList]);
 
   return {
     originalTodoList, // データソース
