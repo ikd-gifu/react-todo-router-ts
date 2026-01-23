@@ -53,8 +53,35 @@
   flex: 1; /* 残りのスペース全体を使う */
 }
 
-.far {
+/* アイコングループ */
+.iconGroup {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* 各アイコン共通スタイル */
+.icon {
   cursor: pointer;
-  color: #f83702;
   font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+
+/* 詳細アイコン - 青 */
+.icon:nth-child(1) {
+  color: #007bff;
+}
+
+/* 編集アイコン - 緑 */
+.icon:nth-child(2) {
+  color: #28a745;
+}
+
+/* 削除アイコン - 赤 */
+.icon:nth-child(3) {
+  color: #f83702;
 }

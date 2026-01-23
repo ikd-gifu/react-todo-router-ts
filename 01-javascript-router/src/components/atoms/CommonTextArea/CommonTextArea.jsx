@@ -12,6 +12,7 @@ export const CommonTextArea = ({
   placeholder,
   handleChangeValue,
   rows = 5,
+  disabled = false,
 }) => (
   <textarea
     className={styles.textarea}
@@ -19,5 +20,6 @@ export const CommonTextArea = ({
     value={inputValue}
     onChange={handleChangeValue}
     rows={rows}
+    disabled={disabled}
   />
 );

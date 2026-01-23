@@ -8,6 +8,7 @@ export const InputForm = ({
   placeholder,
   handleChangeValue,
   handleKeyDown,
+  disabled = false,
 }) => (
   <input
     className={styles.input}
@@ -16,5 +17,6 @@ export const InputForm = ({
     value={inputValue}
     onChange={handleChangeValue}
     onKeyDown={handleKeyDown}
+    disabled={disabled}
   />
 );
