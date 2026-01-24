@@ -11,9 +11,9 @@ export const TodoCreateTemplate = () => {
   // ページ固有のカスタムフックでフォーム状態を管理
   const {
     title,
-    setTitle,
     content,
-    setContent,
+    onChangeTitle,
+    onChangeContent,
     onClickCreate,
   } = useTodoCreateTemplate();
 
@@ -23,7 +23,7 @@ export const TodoCreateTemplate = () => {
         <InputForm
           inputValue={title}
           placeholder="タイトルを入力"
-          handleChangeValue={(e) => setTitle(e.target.value)}
+          handleChangeValue={onChangeTitle}
         />
       </div>
 
@@ -31,7 +31,7 @@ export const TodoCreateTemplate = () => {
         <CommonTextArea
           inputValue={content}
           placeholder="詳細な内容を入力（任意）"
-          handleChangeValue={(e) => setContent(e.target.value)}
+          handleChangeValue={onChangeContent}
           rows={5}
         />
       </div>

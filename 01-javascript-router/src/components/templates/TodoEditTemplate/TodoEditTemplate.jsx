@@ -12,9 +12,9 @@ export const TodoEditTemplate = () => {
   const {
     todo,
     title,
-    setTitle,
     content,
-    setContent,
+    onChangeTitle,
+    onChangeContent,
     onClickUpdate,
   } = useTodoEditTemplate();
 
@@ -35,7 +35,7 @@ export const TodoEditTemplate = () => {
         <InputForm
           inputValue={title}
           placeholder="タイトルを入力"
-          handleChangeValue={(e) => setTitle(e.target.value)}
+          handleChangeValue={onChangeTitle}
         />
       </div>
 
@@ -43,7 +43,7 @@ export const TodoEditTemplate = () => {
         <CommonTextArea
           inputValue={content}
           placeholder="詳細な内容を入力（任意）"
-          handleChangeValue={(e) => setContent(e.target.value)}
+          handleChangeValue={onChangeContent}
           rows={5}
         />
       </div>

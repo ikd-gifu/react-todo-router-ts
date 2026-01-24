@@ -19,6 +19,25 @@ export const useTodoEditTemplate = () => {
   const [title, setTitle] = useState(todo?.title || '');
   const [content, setContent] = useState(todo?.content || '');
 
+  // タイトル入力フィールドの状態管理、内容入力フィールドの状態管理
+  // フォーム送信とTodoの実際の変更処理を分離
+  // UIハンドラーをtemplateから移動
+  /**
+   * title変更処理
+   * @param {Event} e - 入力イベント
+   */
+  const onChangeTitle = useCallback((e) => {
+    setTitle(e.target.value);
+  }, []);
+
+  /**
+   * content変更処理
+   * @param {Event} e - 入力イベント
+   */
+  const onChangeContent = useCallback((e) => {
+    setContent(e.target.value);
+  }, []);
+
   /**
    * Todo更新処理
    */
@@ -32,9 +51,9 @@ export const useTodoEditTemplate = () => {
   return {
     todo,
     title,
-    setTitle,
     content,
-    setContent,
+    onChangeTitle,
+    onChangeContent,
     onClickUpdate,
   };
 };
