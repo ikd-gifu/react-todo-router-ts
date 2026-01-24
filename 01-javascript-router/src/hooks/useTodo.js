@@ -51,9 +51,25 @@ export const useTodo = () => {
     }
   }, [originalTodoList]);
 
+  /**
+   * Todo更新処理
+   * @param {number} targetId - 更新対象のTodoのID
+   * @param {string} title - 新しいタイトル
+   * @param {string} content - 新しい内容
+   */
+  const handleUpdateTodo = useCallback((targetId, title, content) => {
+    const newTodoList = originalTodoList.map((todo) =>
+      todo.id === targetId
+        ? { ...todo, title, content }
+        : todo
+    );
+    setOriginalTodoList(newTodoList);
+  }, [originalTodoList]);
+
   return {
     originalTodoList, // データソース
     handleCreateTodo, // 新規作成処理（フォームから登録用）
     handleDeleteTodo, // 削除処理
+    handleUpdateTodo, // 更新処理
   };
 };

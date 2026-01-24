@@ -5,16 +5,17 @@ import styles from './style.module.css';
 
 /**
  * Todo編集テンプレート
- * URLパラメータから取得したTodoの編集フォームを提供（表示のみ）
+ * URLパラメータから取得したTodoの編集フォームを提供
  */
 export const TodoEditTemplate = () => {
-  // カスタムフックでTodoデータとフォーム状態を取得
+  // カスタムフックでTodoデータ、フォーム状態、更新処理を取得
   const {
     todo,
     title,
     setTitle,
     content,
     setContent,
+    onClickUpdate,
   } = useTodoEditTemplate();
 
   // Todoが存在しない場合の表示
@@ -48,7 +49,7 @@ export const TodoEditTemplate = () => {
       </div>
 
       <div className={styles.buttonGroup}>
-        <CommonButton>
+        <CommonButton onClick={onClickUpdate}>
           更新
         </CommonButton>
       </div>

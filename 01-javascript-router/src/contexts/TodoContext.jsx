@@ -23,6 +23,7 @@ export const TodoProvider = ({ children }) => {
     originalTodoList, // データソース
     handleCreateTodo, // 新規作成関数
     handleDeleteTodo, // 削除関数
+    handleUpdateTodo, // 更新関数
   } = useTodo();
 
   return (
@@ -32,6 +33,7 @@ export const TodoProvider = ({ children }) => {
         originalTodoList, // データソース
         handleCreateTodo, // 新規作成関数
         handleDeleteTodo, // 削除関数
+        handleUpdateTodo, // 更新関数
       }}>
         {/*  このProviderでラップされた子コンポーネント全体 <Router /> */}
         {children}
