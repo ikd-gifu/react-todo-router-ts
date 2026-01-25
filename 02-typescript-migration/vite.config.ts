@@ -1,4 +1,4 @@
-02-typescript-migration/vite.config.tsimport { defineConfig } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { BASE_URL } from './src/constants/navigation'
 

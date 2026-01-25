@@ -1,0 +1,29 @@
+// ブラウザ環境向けのTypeScript設定
+{
+  "compilerOptions": {
+    // TypeScriptの増分ビルド用のキャッシュファイルを保存する場所を指定
+    // "build": "tsc -b && vite build"で変更分のみ再コンパイル可能に
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // Node.js最新版で動くので、新機能が使えるように設定
+    "target": "ES2022",
+    // JavaScript のみを扱う
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts", "src/constants/navigation.ts"]
+}
