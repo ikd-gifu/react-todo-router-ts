@@ -1,5 +1,7 @@
+import { Todo } from "../types/Todo";
+
 // Todoリストの初期データ
-export const INITIAL_TODOS = [
+export const INITIAL_TODOS: Array<Todo> = [
   {
     id: 1,
     title: "ReactでTodoアプリを作成する",
