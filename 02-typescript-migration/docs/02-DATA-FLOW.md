@@ -16,21 +16,21 @@
 
 ### 1. 状態の定義と初期化（useTodo）
 
-**場所**: `src/hooks/useTodo.js`
+**場所**: `src/hooks/useTodo.ts`
 
 **責務**:
 
 - `originalTodoList`: Todo配列の状態管理
 - `uniqueId`: Todo採番用ID管理
-- `addTodo`: Todo追加ロジック
-- `updateTodo`: Todo更新ロジック
-- `deleteTodo`: Todo削除ロジック
+- `handleCreateTodo`: Todo追加ロジック
+- `handleUpdateTodo`: Todo更新ロジック
+- `handleDeleteTodo`: Todo削除ロジック
 
 **重要**: このフックはContextに依存しない。純粋なビジネスロジックとして独立。
 
 ### 2. Contextへの接続（TodoContext）
 
-**場所**: `src/contexts/TodoContext.jsx`
+**場所**: `src/contexts/TodoContext.tsx`
 
 **責務**:
 
@@ -40,18 +40,18 @@
 
 **提供する値**:
 
-```javascript
-{
-  (originalTodoList, // Todo配列
-    addTodo, // 追加関数
-    updateTodo, // 更新関数
-    deleteTodo); // 削除関数
-}
+```typescript
+type TodoContextType = {
+  originalTodoList: Array<TodoType>;
+  handleCreateTodo: (title: string, content: string) => void;
+  handleUpdateTodo: (id: number, title: string, content: string) => void;
+  handleDeleteTodo: (targetId: number, targetTitle: string) => void;
+};
 ```
 
 ### 3. Contextの利用（useTodoContext）
 
-**場所**: `src/hooks/useTodoContext.js`
+**場所**: `src/hooks/useTodoContext.ts`
 
 **責務**:
 
@@ -60,8 +60,8 @@
 
 **使い方**:
 
-```javascript
-const { originalTodoList, addTodo, updateTodo, deleteTodo } = useTodoContext();
+```typescript
+const { originalTodoList, handleCreateTodo, handleUpdateTodo, handleDeleteTodo } = useTodoContext();
 ```
 
 ### 4. テンプレートでの状態利用
@@ -72,23 +72,23 @@ const { originalTodoList, addTodo, updateTodo, deleteTodo } = useTodoContext();
 
 #### パターン1: 一覧表示（TodoListTemplate）
 
-```javascript
+```typescript
 // 1. Contextから状態取得
-const { originalTodoList, deleteTodo } = useTodoContext();
+const { originalTodoList, handleDeleteTodo } = useTodoContext();
 
 // 2. Template専用フックで表示ロジック管理
 const { searchKeyword, showTodoList, handleChangeSearchKeyword } =
   useTodoListTemplate({ originalTodoList });
 
 // 3. 子コンポーネントに渡す
-<TodoList todoList={showTodoList} handleDeleteTodo={deleteTodo} />;
+<TodoList todoList={showTodoList} handleDeleteTodo={handleDeleteTodo} />;
 ```
 
 #### パターン2: 新規作成（TodoCreateTemplate）
 
-```javascript
+```typescript
 // 1. Contextからアクション取得
-const { addTodo } = useTodoContext();
+const { handleCreateTodo } = useTodoContext();
 
 // 2. Template専用フックでフォーム状態管理
 const {
@@ -97,7 +97,7 @@ const {
   handleChangeTitle,
   handleChangeContent,
   handleCreateTodo,
-} = useTodoCreateTemplate({ addTodo });
+} = useTodoCreateTemplate({ handleCreateTodo });
 
 // 3. フォームコンポーネントに渡す
 <InputForm value={inputTitle} onChange={handleChangeTitle} />;
@@ -105,9 +105,9 @@ const {
 
 #### パターン3: 編集（TodoEditTemplate）
 
-```javascript
+```typescript
 // 1. Contextから状態とアクション取得
-const { originalTodoList, updateTodo } = useTodoContext();
+const { originalTodoList, handleUpdateTodo } = useTodoContext();
 
 // 2. Template専用フックで編集対象取得 + フォーム管理
 const {
@@ -117,14 +117,14 @@ const {
   handleChangeTitle,
   handleChangeContent,
   handleUpdateTodo,
-} = useTodoEditTemplate({ originalTodoList, updateTodo });
+} = useTodoEditTemplate({ originalTodoList, handleUpdateTodo });
 
 // 3. フォームコンポーネントに渡す
 ```
 
 #### パターン4: 詳細表示（TodoDetailTemplate）
 
-```javascript
+```typescript
 // 1. Contextから状態取得
 const { originalTodoList } = useTodoContext();
 
@@ -143,7 +143,7 @@ const todo = originalTodoList.find((todo) => String(todo.id) === id);
 TodoCreateTemplate
   ├─> フォーム入力（ローカル状態）
   ├─> handleCreateTodo実行
-  ├─> addTodo（Context経由）実行
+  ├─> handleCreateTodo（Context経由）実行
   ├─> originalTodoList更新
   └─> navigate(NAVIGATION_PATH.TOP)でトップへ遷移
 ```
@@ -159,7 +159,7 @@ TodoList（一覧）
        ├─> originalTodoListから該当Todoを検索
        ├─> フォームに初期値をセット
        ├─> handleUpdateTodo実行
-       ├─> updateTodo（Context経由）実行
+       ├─> handleUpdateTodo（Context経由）実行
        ├─> originalTodoList更新
        └─> navigate(NAVIGATION_PATH.TOP)でトップへ遷移
 ```
@@ -170,7 +170,7 @@ TodoList（一覧）
 TodoList（一覧）
   ├─> 削除アイコンクリック
   ├─> handleDeleteTodo（props経由）実行
-  ├─> deleteTodo（Context経由）実行
+  ├─> handleDeleteTodo（Context経由）実行
   ├─> window.confirm()で確認
   ├─> originalTodoList更新（filterで対象を除外）
   └─> 一覧画面を再レンダリング

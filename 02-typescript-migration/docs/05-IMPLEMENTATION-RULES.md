@@ -4,9 +4,10 @@
 
 ### ファイル名
 
-- **コンポーネント**: PascalCase（例: `TodoList.jsx`, `InputForm.jsx`）
-- **フック**: camelCase + `use`プレフィックス（例: `useTodo.js`, `useTodoListTemplate.js`）
-- **定数**: camelCase（例: `navigation.js`, `data.js`）
+- **コンポーネント**: PascalCase（例: `TodoList.tsx`, `InputForm.tsx`）
+- **フック**: camelCase + `use`プレフィックス（例: `useTodo.ts`, `useTodoListTemplate.ts`）
+- **定数**: camelCase（例: `navigation.ts`, `data.ts`）
+- **型定義**: PascalCase（例: `Todo.ts`）
 - **スタイル**: `style.module.css`（固定）
 
 ### コンポーネント名
@@ -23,93 +24,96 @@
 
 ### 変数名
 
-- **配列**: 複数形（例: `todoList`, `originTodoList`）
+- **配列**: 複数形（例: `todoList`, `originalTodoList`）
 - **boolean**: `is`/`has`プレフィックス（例: `isOpen`, `hasError`）
 - **状態**: 明確な名前（例: `inputTitle`, `searchKeyword`）
 
 ## インポート順序
 
-```javascript
+```typescript
 // 1. React関連
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, FC } from "react";
 
 // 2. 外部ライブラリ
-import { useNavigate, useParams } from 'react-router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate, useParams } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// 3. 内部モジュール（絶対パス風に並べる）
-import { useTodoContext } from '../../../hooks/useTodoContext.js';
-import { BaseLayout } from '../../organisms';
-import { InputForm, CommonButton } from '../../atoms';
-import { NAVIGATION_PATH } from '../../../constants/navigation';
+// 3. 型定義
+import { TodoType } from "../../../types/Todo";
 
-// 4. スタイル
-import styles from './style.module.css';
+// 4. 内部モジュール（絶対パス風に並べる）
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import { BaseLayout } from "../../organisms";
+import { InputForm, CommonButton } from "../../atoms";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+
+// 5. スタイル
+import styles from "./style.module.css";
 ```
 
 ## エクスポートパターン
 
 ### Named Export（推奨）
 
-```javascript
+```typescript
 // 定義
-export const TodoList = ({ todoList }) => { ... };
+export const TodoList: FC<TodoListProps> = ({ todoList }) => { ... };
 
 // インポート
 import { TodoList } from "./TodoList";
 ```
 
-### index.jsでの再エクスポート
+### index.tsでの再エクスポート
 
-```javascript
-// src/components/atoms/index.js
-export { CommonButton } from './CommonButton';
-export { InputForm } from './InputForm';
-export { NavigationLink } from './NavigationLink';
-export { TextArea } from './TextArea';
+```typescript
+// src/components/atoms/index.ts
+export { CommonButton } from "./CommonButton";
+export { InputForm } from "./InputForm";
+export { NavigationLink } from "./NavigationLink";
+export { TextArea } from "./TextArea";
 ```
 
 **使用例**:
 
-```javascript
-import { InputForm, CommonButton, TextArea } from '../../atoms';
+```typescript
+import { InputForm, CommonButton, TextArea } from "../../atoms";
 ```
 
 ## State管理ルール
 
 ### useState
 
-```javascript
+```typescript
 // ✅ 初期値を明示
-const [inputTitle, setInputTitle] = useState('');
-const [searchKeyword, setSearchKeyword] = useState('');
+const [inputTitle, setInputTitle] = useState<string>("");
+const [searchKeyword, setSearchKeyword] = useState<string>("");
 
 // ✅ オプショナルチェーン for 初期値
-const [inputTitle, setInputTitle] = useState(todo?.title || '');
+const [inputTitle, setInputTitle] = useState<string>(todo?.title || "");
 
 // ❌ 不必要な初期値
-const [count, setCount] = useState(0); // 使わないなら定義しない
+const [count, setCount] = useState<number>(0); // 使わないなら定義しない
 ```
 
 ### useCallback
 
-```javascript
+```typescript
 // ✅ イベントハンドラは useCallback
 const handleChangeTitle = useCallback(
-  (e) => setInputTitle(e.target.value),
+  (e: ChangeEvent<HTMLInputElement>) => setInputTitle(e.target.value),
   []
 );
 
 // ✅ 依存配列を正確に
 const handleCreateTodo = useCallback(
-  (e) => {
+  (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputTitle !== "" && inputContent !== "") {
-      addTodo(inputTitle, inputContent);
+      handleCreateTodo(inputTitle, inputContent);
       navigate(NAVIGATION_PATH.TOP);
     }
   },
-  [addTodo, inputTitle, inputContent, navigate]
+  [handleCreateTodo, inputTitle, inputContent, navigate]
 );
 
 // ❌ 依存配列を省略
@@ -118,17 +122,17 @@ const handleClick = () => { ... }; // 毎回再生成される
 
 ### useMemo
 
-```javascript
+```typescript
 // ✅ 重い計算処理は useMemo
 const showTodoList = useMemo(() => {
-  const regexp = new RegExp('^' + searchKeyword, 'i');
-  return originTodoList.filter((todo) => todo.title.match(regexp));
-}, [originTodoList, searchKeyword]);
+  const regexp = new RegExp("^" + searchKeyword, "i");
+  return originalTodoList.filter((todo) => todo.title.match(regexp));
+}, [originalTodoList, searchKeyword]);
 
 // ✅ 検索処理も useMemo
 const todo = useMemo(
-  () => originTodoList.find((todo) => String(todo.id) === id),
-  [id, originTodoList],
+  () => originalTodoList.find((todo) => String(todo.id) === id),
+  [id, originalTodoList]
 );
 
 // ❌ シンプルな計算に使わない
@@ -141,7 +145,7 @@ const total = useMemo(() => a + b, [a, b]); // 不要
 
 ```javascript
 // ✅ useTodoContext を使用
-const { originTodoList, addTodo } = useTodoContext();
+const { originalTodoList, handleCreateTodo } = useTodoContext();
 
 // ❌ 直接useContextを使用しない
 const context = useContext(TodoContext); // useTodoContextを使うべき
@@ -151,26 +155,39 @@ const context = useContext(TodoContext); // useTodoContextを使うべき
 
 ```javascript
 // ✅ 必要な値だけ分割代入
-const { originTodoList, deleteTodo } = useTodoContext();
+const { originalTodoList, handleDeleteTodo } = useTodoContext();
 
 // ❌ 使わない値まで取得
-const { originTodoList, addTodo, updateTodo, deleteTodo } = useTodoContext();
-// この例でaddTodo, updateTodoを使っていないなら不要
+const { originalTodoList, handleCreateTodo, handleUpdateTodo, handleDeleteTodo } = useTodoContext();
+// この例でhandleCreateTodo, handleUpdateTodoを使っていないなら不要
 ```
 
 ## Props設計ルール
 
 ### Props定義
 
-```javascript
-// ✅ 必要最小限のprops
-export const InputForm = ({ value, placeholder, onChange, disabled }) => { ... };
+```typescript
+// ✅ 必要最小限のpropsを型定義
+type InputFormProps = ComponentProps<"input">;
+export const InputForm: FC<InputFormProps> = ({ value, placeholder, onChange, disabled = false }) => { ... };
 
 // ✅ オプショナルなpropsは初期値設定
-export const CommonButton = ({ type = "button", label, onClick }) => { ... };
+type CommonButtonProps = ComponentProps<"button"> & {
+  children: ReactNode;
+};
+export const CommonButton: FC<CommonButtonProps> = ({ type = "button", children, onClick }) => { ... };
 
 // ❌ 過剰なprops
-export const InputForm = ({ value, placeholder, onChange, onBlur, onFocus, className, style, ... }) => { ... };
+type InputFormProps = {
+  value: string;
+  placeholder: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (e: FocusEvent<HTMLInputElement>) => void;
+  onFocus: (e: FocusEvent<HTMLInputElement>) => void;
+  className: string;
+  style: CSSProperties;
+  // ...その他多数
+};
 ```
 
 ### Props drilling回避
@@ -178,20 +195,20 @@ export const InputForm = ({ value, placeholder, onChange, onBlur, onFocus, class
 ```javascript
 // ✅ Context API で直接取得
 const TodoListTemplate = () => {
-  const { deleteTodo } = useTodoContext();
-  return <TodoList handleDeleteTodo={deleteTodo} />;
+  const { handleDeleteTodo } = useTodoContext();
+  return <TodoList handleDeleteTodo={handleDeleteTodo} />;
 };
 
 // ❌ 不要な中間コンポーネント経由
-const Parent = ({ deleteTodo }) => <Child deleteTodo={deleteTodo} />;
-const Child = ({ deleteTodo }) => <GrandChild deleteTodo={deleteTodo} />;
+const Parent = ({ handleDeleteTodo }) => <Child handleDeleteTodo={handleDeleteTodo} />;
+const Child = ({ handleDeleteTodo }) => <GrandChild handleDeleteTodo={handleDeleteTodo} />;
 ```
 
 ## フォーム実装ルール
 
 ### 制御されたコンポーネント
 
-```javascript
+```typescript
 // ✅ value + onChange でバインド
 <InputForm
   value={inputTitle}
@@ -227,17 +244,17 @@ const handleCreateTodo = useCallback(
   (e) => {
     e.preventDefault();
     if (inputTitle !== '' && inputContent !== '') {
-      addTodo(inputTitle, inputContent);
+      handleCreateTodo(inputTitle, inputContent);
       navigate(NAVIGATION_PATH.TOP);
     }
   },
-  [addTodo, inputTitle, inputContent, navigate],
+  [handleCreateTodo, inputTitle, inputContent, navigate],
 );
 
 // ❌ バリデーションなし
 const handleCreateTodo = useCallback((e) => {
   e.preventDefault();
-  addTodo(inputTitle, inputContent); // 空文字でも追加される
+  handleCreateTodo(inputTitle, inputContent); // 空文字でも追加される
 }, []);
 ```
 
@@ -264,10 +281,10 @@ const navigate = useNavigate();
 const handleCreateTodo = useCallback(
   (e) => {
     e.preventDefault();
-    addTodo(inputTitle, inputContent);
+    handleCreateTodo(inputTitle, inputContent);
     navigate(NAVIGATION_PATH.TOP);
   },
-  [addTodo, inputTitle, inputContent, navigate],
+  [handleCreateTodo, inputTitle, inputContent, navigate],
 );
 
 // ❌ 直接呼び出し
@@ -280,10 +297,10 @@ const handleCreateTodo = useCallback(
 ```javascript
 // ✅ 明示的な型変換
 const { id } = useParams();
-const todo = originTodoList.find((todo) => String(todo.id) === id);
+const todo = originalTodoList.find((todo) => String(todo.id) === id);
 
 // ❌ 暗黙的な型変換
-const todo = originTodoList.find((todo) => todo.id == id); // 型変換依存
+const todo = originalTodoList.find((todo) => todo.id == id); // 型変換依存
 ```
 
 ## スタイリングルール
@@ -336,19 +353,19 @@ const [inputTitle, setInputTitle] = useState(todo?.title || '');
 
 ```javascript
 // ✅ window.confirm で確認
-const deleteTodo = useCallback(
+const handleDeleteTodo = useCallback(
   (targetId, targetTitle) => {
     if (window.confirm(`「${targetTitle}」のtodoを削除しますか？`)) {
-      const newTodoList = originTodoList.filter((todo) => todo.id !== targetId);
-      setOriginTodoList(newTodoList);
+      const newTodoList = originalTodoList.filter((todo) => todo.id !== targetId);
+      setOriginalTodoList(newTodoList);
     }
   },
-  [originTodoList],
+  [originalTodoList],
 );
 
 // ❌ 確認なし
-const deleteTodo = (targetId) => {
-  setOriginTodoList(originTodoList.filter((todo) => todo.id !== targetId));
+const handleDeleteTodo = (targetId) => {
+  setOriginalTodoList(originalTodoList.filter((todo) => todo.id !== targetId));
 };
 ```
 
@@ -358,12 +375,12 @@ const deleteTodo = (targetId) => {
 
 ```javascript
 // ✅ 新しい配列を作成
-const newTodoList = [...originTodoList, { id: nextUniqueId, title, content }];
-setOriginTodoList(newTodoList);
+const newTodoList = [...originalTodoList, { id: nextUniqueId, title, content }];
+setOriginalTodoList(newTodoList);
 
 // ❌ 元の配列を変更
-originTodoList.push({ id: nextUniqueId, title, content });
-setOriginTodoList(originTodoList); // 再レンダリングされない
+originalTodoList.push({ id: nextUniqueId, title, content });
+setOriginalTodoList(originalTodoList); // 再レンダリングされない
 ```
 
 ### key属性
@@ -390,7 +407,7 @@ setOriginTodoList(originTodoList); // 再レンダリングされない
  * @param {string} title - Todoタイトル
  * @param {string} content - Todo内容
  */
-const addTodo = useCallback((title, content) => {
+const handleCreateTodo = useCallback((title, content) => {
   // 実装
 }, []);
 ```
@@ -398,13 +415,13 @@ const addTodo = useCallback((title, content) => {
 ### 複雑なロジックの説明
 
 ```javascript
-// useMemoの第二引数([originTodoList, searchKeyword])に依存して処理が実行される
-// originTodoListとsearchKeywordの値が変更される度にfilterの検索処理が実行
+// useMemoの第二引数([originalTodoList, searchKeyword])に依存して処理が実行される
+// originalTodoListとsearchKeywordの値が変更される度にfilterの検索処理が実行
 // ただし結果が前回と同じならキャッシュを返却し処理は実行されない
 const showTodoList = useMemo(() => {
   const regexp = new RegExp('^' + searchKeyword, 'i');
-  return originTodoList.filter((todo) => todo.title.match(regexp));
-}, [originTodoList, searchKeyword]);
+  return originalTodoList.filter((todo) => todo.title.match(regexp));
+}, [originalTodoList, searchKeyword]);
 ```
 
 ## ファイル構造ルール
@@ -413,21 +430,21 @@ const showTodoList = useMemo(() => {
 
 ```
 ComponentName/
-  ├── index.js           # エクスポート
-  ├── ComponentName.jsx  # コンポーネント本体
+  ├── index.ts           # エクスポート
+  ├── ComponentName.tsx  # コンポーネント本体
   ├── style.module.css   # スタイル
-  └── useComponentName.js # 専用フック（Templateのみ）
+  └── useComponentName.ts # 専用フック（Templateのみ）
 ```
 
-### index.jsの役割
+### index.tsの役割
 
-```javascript
+```typescript
 // Templateの場合
-export { TodoListTemplate } from './TodoListTemplate';
+export { TodoListTemplate } from "./TodoListTemplate";
 
-// Atomsなどのindex.js
-export { CommonButton } from './CommonButton';
-export { InputForm } from './InputForm';
+// Atomsなどのindex.ts
+export { CommonButton } from "./CommonButton";
+export { InputForm } from "./InputForm";
 ```
 
 ## 実装チェックリスト

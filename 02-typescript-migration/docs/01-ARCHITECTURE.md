@@ -7,17 +7,18 @@ Atomic Designパターンに基づいたコンポーネント設計により、�
 
 ## 技術スタック
 
-- **React**: 19.2.0
-- **React Router**: 7.12.0（react-router パッケージを使用）
-- **Vite**: 7.2.4（ビルドツール）
+- **React**: 19.0.0
+- **React Router**: 7.1.5（react-router パッケージを使用）
+- **TypeScript**: 5.7.2（型安全性の確保）
+- **Vite**: 6.1.0（ビルドツール）
 - **CSS Modules**: コンポーネントスコープのスタイリング
-- **Font Awesome**: @fortawesome/react-fontawesome 3.1.1, @fortawesome/free-solid-svg-icons 7.1.0
+- **Font Awesome**: @fortawesome/react-fontawesome 0.2.2, @fortawesome/free-solid-svg-icons 6.7.2
 
 ## ディレクトリ構造の原則
 
 ```
 src/
-├── main.jsx                    # アプリケーションエントリーポイント
+├── main.tsx                    # アプリケーションエントリーポイント
 ├── router/                     # ルーティング定義
 ├── pages/                      # ページコンポーネント（薄いラッパー）
 ├── components/                 # Atomic Design構造
@@ -27,12 +28,13 @@ src/
 │   └── templates/              # ページレイアウト + ビジネスロジック
 ├── contexts/                   # Context API によるグローバル状態管理
 ├── hooks/                      # カスタムフック
+├── types/                      # TypeScript型定義
 └── constants/                  # 定数定義
 ```
 
 ## レイヤー責務の分離
 
-### 1. main.jsx（エントリーポイント）
+### 1. main.tsx（エントリーポイント）
 
 - Providerの配置
 - Routerのマウント

@@ -4,7 +4,7 @@
 
 ### パス定義の二重管理
 
-**場所**: `src/constants/navigation.js`
+**場所**: `src/constants/navigation.ts`
 
 #### NAVIGATION_LIST（ルート定義用）
 
@@ -41,19 +41,26 @@ export const NAVIGATION_PATH = {
 
 ### Router定義
 
-**場所**: `src/router/index.jsx`
+**場所**: `src/router/TodoRouter.tsx`
 
-```javascript
-export const Router = () => {
+```typescript
+import { NAVIGATION_LIST } from "../constants/navigation";
+import { Routes, Route } from "react-router";
+import {
+  TodoCreatePage,
+  TodoDetailPage,
+  TodoEditPage,
+  TodoListPage,
+} from "../pages";
+
+export const TodoRouter = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index path={NAVIGATION_LIST.TOP} element={<TodoListPage />} />
-        <Route path={NAVIGATION_LIST.DETAIL} element={<TodoDetailPage />} />
-        <Route path={NAVIGATION_LIST.CREATE} element={<TodoCreatePage />} />
-        <Route path={NAVIGATION_LIST.EDIT} element={<TodoEditPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route index path={NAVIGATION_LIST.TOP} element={<TodoListPage />} />
+      <Route path={NAVIGATION_LIST.DETAIL} element={<TodoDetailPage />} />
+      <Route path={NAVIGATION_LIST.CREATE} element={<TodoCreatePage />} />
+      <Route path={NAVIGATION_LIST.EDIT} element={<TodoEditPage />} />
+    </Routes>
   );
 };
 ```
@@ -66,21 +73,27 @@ export const Router = () => {
 
 ### Routerのマウント
 
-**場所**: `src/main.jsx`
+**場所**: `src/main.tsx`
 
-```javascript
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+```typescript
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { TodoProvider } from "./contexts/TodoContext";
+import { Router } from "./router";
+import "./index.css";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
     <TodoProvider>
       <Router />
     </TodoProvider>
-  </React.StrictMode>,
+  </StrictMode>
 );
 ```
 
 **レイヤー構造**:
 
-1. `React.StrictMode`: 開発時の警告表示
+1. `StrictMode`: 開発時の警告表示
 2. `TodoProvider`: グローバル状態の提供
 3. `Router`: ルーティング機能
 
@@ -88,10 +101,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 ### パターン1: NavLinkによる静的リンク
 
-**場所**: `src/components/atoms/NavigationLink/NavigationLink.jsx`
+**場所**: `src/components/atoms/NavigationLink/NavigationLink.tsx`
 
-```javascript
-export const NavigationLink = ({ title, linkPath }) => (
+```typescript
+import { FC } from "react";
+import { NavLink } from "react-router";
+import styles from "./style.module.css";
+
+type NavigationLinkProps = {
+  title: string;
+  linkPath: string;
+};
+
+export const NavigationLink: FC<NavigationLinkProps> = ({
+  title,
+  linkPath,
+}) => (
   <li className={styles.li}>
     <NavLink to={linkPath}>{title}</NavLink>
   </li>
@@ -100,7 +125,7 @@ export const NavigationLink = ({ title, linkPath }) => (
 
 **使用例**:
 
-```javascript
+```typescript
 <NavigationLink title={"Top"} linkPath={NAVIGATION_PATH.TOP} />
 <NavigationLink title={"Create"} linkPath={NAVIGATION_PATH.CREATE} />
 ```
@@ -117,36 +142,44 @@ export const NavigationLink = ({ title, linkPath }) => (
 
 #### 例1: フォーム送信後の遷移
 
-```javascript
-// src/components/templates/TodoCreateTemplate/useTopCreateTemplate.js
+```typescript
+// src/components/templates/TodoCreateTemplate/useTodoCreateTemplate.ts
+import { useNavigate } from "react-router";
+import { useCallback, ChangeEvent } from "react";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+
 const navigate = useNavigate();
 
 const handleCreateTodo = useCallback(
-  (e) => {
+  (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputTitle !== '' && inputContent !== '') {
-      addTodo(inputTitle, inputContent);
+    if (inputTitle !== "" && inputContent !== "") {
+      handleCreateTodo(inputTitle, inputContent);
       navigate(NAVIGATION_PATH.TOP); // 作成後トップへ
     }
   },
-  [addTodo, inputTitle, inputContent, navigate],
+  [handleCreateTodo, inputTitle, inputContent, navigate]
 );
 ```
 
 #### 例2: 動的パラメータ付き遷移
 
-```javascript
-// src/components/organisms/TodoList/TodoList.jsx
+```typescript
+// src/components/organisms/TodoList/TodoList.tsx
+import { useNavigate } from "react-router";
+import { useCallback } from "react";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+
 const navigate = useNavigate();
 
 const handleMoveDetailPage = useCallback(
-  (id) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
-  [navigate],
+  (id: number) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
+  [navigate]
 );
 
 const handleMoveEditPage = useCallback(
-  (id) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
-  [navigate],
+  (id: number) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
+  [navigate]
 );
 ```
 
@@ -162,20 +195,25 @@ const handleMoveEditPage = useCallback(
 
 #### 例1: 詳細ページ
 
-```javascript
-// src/components/templates/TodoDetailTemplate/TodoDetailTemplate.jsx
+```typescript
+// src/components/templates/TodoDetailTemplate/TodoDetailTemplate.tsx
+import { useParams } from "react-router";
+
 const { id } = useParams();
-const todo = originTodoList.find((todo) => String(todo.id) === id);
+const todo = originalTodoList.find((todo) => String(todo.id) === id);
 ```
 
 #### 例2: 編集ページ
 
-```javascript
-// src/components/templates/TodoEditTemplate/useTodoEditTemplate.js
+```typescript
+// src/components/templates/TodoEditTemplate/useTodoEditTemplate.ts
+import { useParams } from "react-router";
+import { useMemo } from "react";
+
 const { id } = useParams();
 const todo = useMemo(
-  () => originTodoList.find((todo) => String(todo.id) === id),
-  [id, originTodoList],
+  () => originalTodoList.find((todo) => String(todo.id) === id),
+  [id, originalTodoList]
 );
 ```
 
@@ -191,20 +229,20 @@ const todo = useMemo(
 
 ✅ **良い例**:
 
-```javascript
+```typescript
 navigate(NAVIGATION_PATH.TOP);
 ```
 
 ❌ **悪い例**:
 
-```javascript
-navigate('/react-output-router-v2/'); // ハードコーディング
+```typescript
+navigate("/react-output-router-ts-v2/"); // ハードコーディング
 ```
 
 ### 2. BASE_PATHの活用
 
-```javascript
-export const BASE_PATH = '/react-output-router-v2';
+```typescript
+export const BASE_PATH = "/react-output-router-ts-v2";
 ```
 
 - デプロイ先に応じて一箇所変更するだけで全体に反映
@@ -212,7 +250,7 @@ export const BASE_PATH = '/react-output-router-v2';
 
 ### 3. 型変換の明示
 
-```javascript
+```typescript
 // URLパラメータは文字列なので明示的に変換
 String(todo.id) === id; // ✅ 推奨
 todo.id == id; // ❌ 暗黙的な型変換に依存
@@ -220,10 +258,10 @@ todo.id == id; // ❌ 暗黙的な型変換に依存
 
 ### 4. useMemoによる最適化
 
-```javascript
+```typescript
 const todo = useMemo(
-  () => originTodoList.find((todo) => String(todo.id) === id),
-  [id, originTodoList],
+  () => originalTodoList.find((todo) => String(todo.id) === id),
+  [id, originalTodoList]
 );
 ```
 
@@ -232,10 +270,10 @@ const todo = useMemo(
 
 ### 5. useCallbackによる最適化
 
-```javascript
+```typescript
 const handleMoveDetailPage = useCallback(
-  (id) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
-  [navigate],
+  (id: number) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
+  [navigate]
 );
 ```
 
@@ -244,9 +282,9 @@ const handleMoveDetailPage = useCallback(
 
 ## ルーティング実装チェックリスト
 
-- [ ] `constants/navigation.js`にパス定義を追加
+- [ ] `constants/navigation.ts`にパス定義を追加
 - [ ] `NAVIGATION_LIST`（ルート定義用）と`NAVIGATION_PATH`（遷移用）の両方を定義
-- [ ] `router/index.jsx`に`<Route>`を追加
+- [ ] `router/TodoRouter.tsx`に`<Route>`を追加
 - [ ] Pageコンポーネントを作成（Templateのラッパー）
 - [ ] Templateコンポーネントを作成
 - [ ] 動的パラメータが必要な場合は`useParams()`で取得

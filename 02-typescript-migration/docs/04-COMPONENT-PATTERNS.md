@@ -29,17 +29,29 @@ Pages (Templateのラッパー)
 
 #### InputForm
 
-**場所**: `src/components/atoms/InputForm/InputForm.jsx`
+**場所**: `src/components/atoms/InputForm/InputForm.tsx`
 
-```javascript
-export const InputForm = ({ value, placeholder, onChange, disabled }) => (
+```typescript
+import { FC, ComponentProps } from "react";
+import styles from "./style.module.css";
+
+type InputFormProps = ComponentProps<"input">;
+
+export const InputForm: FC<InputFormProps> = ({
+  disabled = false,
+  value,
+  placeholder,
+  onChange,
+  onKeyDown,
+}) => (
   <input
+    disabled={disabled}
     className={styles.input}
     type="text"
-    value={value}
     placeholder={placeholder}
+    value={value}
     onChange={onChange}
-    disabled={disabled}
+    onKeyDown={onKeyDown}
   />
 );
 ```
@@ -52,12 +64,23 @@ export const InputForm = ({ value, placeholder, onChange, disabled }) => (
 
 #### CommonButton
 
-**場所**: `src/components/atoms/CommonButton/CommonButton.jsx`
+**場所**: `src/components/atoms/CommonButton/CommonButton.tsx`
 
-```javascript
-export const CommonButton = ({ type, label, onClick }) => (
+```typescript
+import { FC, ComponentProps, ReactNode } from "react";
+import styles from "./style.module.css";
+
+type CommonButtonProps = ComponentProps<"button"> & {
+  children: ReactNode;
+};
+
+export const CommonButton: FC<CommonButtonProps> = ({
+  type,
+  children,
+  onClick,
+}) => (
   <button className={styles.button} type={type} onClick={onClick}>
-    {label}
+    {children}
   </button>
 );
 ```
@@ -69,10 +92,22 @@ export const CommonButton = ({ type, label, onClick }) => (
 
 #### NavigationLink
 
-**場所**: `src/components/atoms/NavigationLink/NavigationLink.jsx`
+**場所**: `src/components/atoms/NavigationLink/NavigationLink.tsx`
 
-```javascript
-export const NavigationLink = ({ title, linkPath }) => (
+```typescript
+import { FC } from "react";
+import { NavLink } from "react-router";
+import styles from "./style.module.css";
+
+type NavigationLinkProps = {
+  title: string;
+  linkPath: string;
+};
+
+export const NavigationLink: FC<NavigationLinkProps> = ({
+  title,
+  linkPath,
+}) => (
   <li className={styles.li}>
     <NavLink to={linkPath}>{title}</NavLink>
   </li>
@@ -84,15 +119,15 @@ export const NavigationLink = ({ title, linkPath }) => (
 - React Routerの`NavLink`をラップ
 - スタイリングを隠蔽
 
-### Atomsのindex.js
+### Atomsのindex.ts
 
-**場所**: `src/components/atoms/index.js`
+**場所**: `src/components/atoms/index.ts`
 
-```javascript
-export { CommonButton } from './CommonButton';
-export { InputForm } from './InputForm';
-export { NavigationLink } from './NavigationLink';
-export { TextArea } from './TextArea';
+```typescript
+export { CommonButton } from "./CommonButton";
+export { InputForm } from "./InputForm";
+export { NavigationLink } from "./NavigationLink";
+export { TextArea } from "./TextArea";
 ```
 
 **目的**:
@@ -112,14 +147,18 @@ export { TextArea } from './TextArea';
 
 #### Navigation
 
-**場所**: `src/components/molecules/Navigation/Navigation.jsx`
+**場所**: `src/components/molecules/Navigation/Navigation.tsx`
 
-```javascript
+```typescript
+import { NavigationLink } from "../../atoms";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+import styles from "./style.module.css";
+
 export const Navigation = () => (
   <nav>
     <ul className={styles.ul}>
-      <NavigationLink title={'Top'} linkPath={NAVIGATION_PATH.TOP} />
-      <NavigationLink title={'Create'} linkPath={NAVIGATION_PATH.CREATE} />
+      <NavigationLink title={"Top"} linkPath={NAVIGATION_PATH.TOP} />
+      <NavigationLink title={"Create"} linkPath={NAVIGATION_PATH.CREATE} />
     </ul>
   </nav>
 );
@@ -143,10 +182,19 @@ export const Navigation = () => (
 
 #### BaseLayout
 
-**場所**: `src/components/organisms/BaseLayout/BaseLayout.jsx`
+**場所**: `src/components/organisms/BaseLayout/BaseLayout.tsx`
 
-```javascript
-export const BaseLayout = ({ children, title }) => (
+```typescript
+import { FC, ReactNode } from "react";
+import { Navigation } from "../../molecules";
+import styles from "./style.module.css";
+
+type BaseLayoutProps = {
+  children: ReactNode;
+  title: string;
+};
+
+export const BaseLayout: FC<BaseLayoutProps> = ({ children, title }) => (
   <div className={styles.container}>
     <section className={styles.common}>
       <Navigation />
@@ -165,20 +213,33 @@ export const BaseLayout = ({ children, title }) => (
 
 #### TodoList
 
-**場所**: `src/components/organisms/TodoList/TodoList.jsx`
+**場所**: `src/components/organisms/TodoList/TodoList.tsx`
 
-```javascript
-export const TodoList = ({ todoList, handleDeleteTodo }) => {
+```typescript
+import { FC, useCallback } from "react";
+import { useNavigate } from "react-router";
+import { TodoType } from "../../../types/Todo";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import styles from "./style.module.css";
+
+type TodoListProps = {
+  todoList: Array<TodoType>;
+  handleDeleteTodo: (targetId: number, targetTitle: string) => void;
+};
+
+export const TodoList: FC<TodoListProps> = ({ todoList, handleDeleteTodo }) => {
   const navigate = useNavigate();
 
   const handleMoveDetailPage = useCallback(
-    (id) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
-    [navigate],
+    (id: number) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
+    [navigate]
   );
 
   const handleMoveEditPage = useCallback(
-    (id) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
-    [navigate],
+    (id: number) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
+    [navigate]
   );
 
   return (
@@ -198,6 +259,7 @@ export const TodoList = ({ todoList, handleDeleteTodo }) => {
             <FontAwesomeIcon
               icon={faTrashAlt}
               onClick={() => handleDeleteTodo(todo.id, todo.title)}
+            />
             />
           </div>
         </li>
@@ -228,27 +290,33 @@ export const TodoList = ({ todoList, handleDeleteTodo }) => {
 
 **場所**: `src/components/templates/TodoListTemplate/`
 
-##### TodoListTemplate.jsx
+##### TodoListTemplate.tsx
 
-```javascript
+```typescript
+import { BaseLayout, TodoList } from "../../organisms";
+import { InputForm } from "../../atoms";
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import { useTodoListTemplate } from "./useTodoListTemplate";
+import styles from "./style.module.css";
+
 export const TodoListTemplate = () => {
-  const { originTodoList, deleteTodo } = useTodoContext();
+  const { originalTodoList, handleDeleteTodo } = useTodoContext();
   const { searchKeyword, showTodoList, handleChangeSearchKeyword } =
-    useTodoListTemplate({ originTodoList });
+    useTodoListTemplate({ originalTodoList });
 
   return (
-    <BaseLayout title={'TodoList'}>
+    <BaseLayout title={"TodoList"}>
       <div className={styles.container}>
         <div className={styles.area}>
           <InputForm
             value={searchKeyword}
-            placeholder={'Search Keyword'}
+            placeholder={"Search Keyword"}
             onChange={handleChangeSearchKeyword}
           />
         </div>
         <div className={styles.area}>
           {showTodoList.length > 0 && (
-            <TodoList todoList={showTodoList} handleDeleteTodo={deleteTodo} />
+            <TodoList todoList={showTodoList} handleDeleteTodo={handleDeleteTodo} />
           )}
         </div>
       </div>
@@ -257,20 +325,29 @@ export const TodoListTemplate = () => {
 };
 ```
 
-##### useTodoListTemplate.js
+##### useTodoListTemplate.ts
 
-```javascript
-export const useTodoListTemplate = ({ originTodoList }) => {
-  const [searchKeyword, setSearchKeyword] = useState('');
+```typescript
+import { useMemo, useState, useCallback, ChangeEvent } from "react";
+import { TodoType } from "../../../types/Todo";
+
+type UseTodoListTemplateParams = {
+  originalTodoList: Array<TodoType>;
+};
+
+export const useTodoListTemplate = ({
+  originalTodoList,
+}: UseTodoListTemplateParams) => {
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const showTodoList = useMemo(() => {
-    const regexp = new RegExp('^' + searchKeyword, 'i');
-    return originTodoList.filter((todo) => todo.title.match(regexp));
-  }, [originTodoList, searchKeyword]);
+    const regexp = new RegExp("^" + searchKeyword, "i");
+    return originalTodoList.filter((todo) => todo.title.match(regexp));
+  }, [originalTodoList, searchKeyword]);
 
   const handleChangeSearchKeyword = useCallback(
-    (e) => setSearchKeyword(e.target.value),
-    [],
+    (e: ChangeEvent<HTMLInputElement>) => setSearchKeyword(e.target.value),
+    []
   );
 
   return { searchKeyword, showTodoList, handleChangeSearchKeyword };
@@ -286,38 +363,44 @@ export const useTodoListTemplate = ({ originTodoList }) => {
 
 **場所**: `src/components/templates/TodoCreateTemplate/`
 
-##### TodoCreateTemplate.jsx
+##### TodoCreateTemplate.tsx
 
-```javascript
+```typescript
+import { BaseLayout } from "../../organisms";
+import { InputForm, TextArea, CommonButton } from "../../atoms";
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import { useTodoCreateTemplate } from "./useTodoCreateTemplate";
+import styles from "./style.module.css";
+
 export const TodoCreateTemplate = () => {
-  const { addTodo } = useTodoContext();
+  const { handleCreateTodo } = useTodoContext();
   const {
     inputTitle,
     inputContent,
     handleChangeTitle,
     handleChangeContent,
     handleCreateTodo,
-  } = useTodoCreateTemplate({ addTodo });
+  } = useTodoCreateTemplate({ handleCreateTodo });
 
   return (
-    <BaseLayout title={'Create Todo'}>
+    <BaseLayout title={"Create Todo"}>
       <form className={styles.container} onSubmit={handleCreateTodo}>
         <div className={styles.area}>
           <InputForm
             value={inputTitle}
-            placeholder={'Title'}
+            placeholder={"Title"}
             onChange={handleChangeTitle}
           />
         </div>
         <div className={styles.area}>
           <TextArea
             value={inputContent}
-            placeholder={'Content'}
+            placeholder={"Content"}
             onChange={handleChangeContent}
           />
         </div>
         <div className={styles.area}>
-          <CommonButton type="submit" label="Create Todo" />
+          <CommonButton type="submit">Create Todo</CommonButton>
         </div>
       </form>
     </BaseLayout>
@@ -325,33 +408,43 @@ export const TodoCreateTemplate = () => {
 };
 ```
 
-##### useTopCreateTemplate.js
+##### useTodoCreateTemplate.ts
 
-```javascript
-export const useTodoCreateTemplate = ({ addTodo }) => {
+```typescript
+import { useState, useCallback, ChangeEvent } from "react";
+import { useNavigate } from "react-router";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+
+type UseTodoCreateTemplateParams = {
+  handleCreateTodo: (title: string, content: string) => void;
+};
+
+export const useTodoCreateTemplate = ({
+  handleCreateTodo,
+}: UseTodoCreateTemplateParams) => {
   const navigate = useNavigate();
-  const [inputTitle, setInputTitle] = useState('');
-  const [inputContent, setInputContent] = useState('');
+  const [inputTitle, setInputTitle] = useState("");
+  const [inputContent, setInputContent] = useState("");
 
   const handleChangeTitle = useCallback(
-    (e) => setInputTitle(e.target.value),
-    [],
+    (e: ChangeEvent<HTMLInputElement>) => setInputTitle(e.target.value),
+    []
   );
 
   const handleChangeContent = useCallback(
-    (e) => setInputContent(e.target.value),
-    [],
+    (e: ChangeEvent<HTMLTextAreaElement>) => setInputContent(e.target.value),
+    []
   );
 
   const handleCreateTodo = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (inputTitle !== '' && inputContent !== '') {
-        addTodo(inputTitle, inputContent);
+      if (inputTitle !== "" && inputContent !== "") {
+        handleCreateTodo(inputTitle, inputContent);
         navigate(NAVIGATION_PATH.TOP);
       }
     },
-    [addTodo, inputTitle, inputContent, navigate],
+    [handleCreateTodo, inputTitle, inputContent, navigate]
   );
 
   return {
@@ -373,11 +466,17 @@ export const useTodoCreateTemplate = ({ addTodo }) => {
 
 **場所**: `src/components/templates/TodoEditTemplate/`
 
-##### TodoEditTemplate.jsx
+##### TodoEditTemplate.tsx
 
-```javascript
+```typescript
+import { BaseLayout } from "../../organisms";
+import { InputForm, TextArea, CommonButton } from "../../atoms";
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import { useTodoEditTemplate } from "./useTodoEditTemplate";
+import styles from "./style.module.css";
+
 export const TodoEditTemplate = () => {
-  const { originTodoList, updateTodo } = useTodoContext();
+  const { originalTodoList, handleUpdateTodo } = useTodoContext();
   const {
     todo,
     inputTitle,
@@ -385,28 +484,28 @@ export const TodoEditTemplate = () => {
     handleChangeTitle,
     handleChangeContent,
     handleUpdateTodo,
-  } = useTodoEditTemplate({ originTodoList, updateTodo });
+  } = useTodoEditTemplate({ originalTodoList, handleUpdateTodo });
 
   return (
-    <BaseLayout title={'TodoEdit'}>
+    <BaseLayout title={"TodoEdit"}>
       {!!todo && (
         <form className={styles.container} onSubmit={handleUpdateTodo}>
           <div className={styles.area}>
             <InputForm
               value={inputTitle}
-              placeholder={'Title'}
+              placeholder={"Title"}
               onChange={handleChangeTitle}
             />
           </div>
           <div className={styles.area}>
             <TextArea
               value={inputContent}
-              placeholder={'Content'}
+              placeholder={"Content"}
               onChange={handleChangeContent}
             />
           </div>
           <div className={styles.area}>
-            <CommonButton type="submit" label="Edit Todo" />
+            <CommonButton type="submit">Edit Todo</CommonButton>
           </div>
         </form>
       )}
@@ -415,40 +514,53 @@ export const TodoEditTemplate = () => {
 };
 ```
 
-##### useTodoEditTemplate.js
+##### useTodoEditTemplate.ts
 
-```javascript
-export const useTodoEditTemplate = ({ originTodoList, updateTodo }) => {
+```typescript
+import { useMemo, useState, useCallback, ChangeEvent } from "react";
+import { useParams, useNavigate } from "react-router";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+import { TodoType } from "../../../types/Todo";
+
+type UseTodoEditTemplateParams = {
+  originalTodoList: Array<TodoType>;
+  handleUpdateTodo: (id: number, title: string, content: string) => void;
+};
+
+export const useTodoEditTemplate = ({
+  originalTodoList,
+  handleUpdateTodo,
+}: UseTodoEditTemplateParams) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const todo = useMemo(
-    () => originTodoList.find((todo) => String(todo.id) === id),
-    [id, originTodoList],
+    () => originalTodoList.find((todo) => String(todo.id) === id),
+    [id, originalTodoList]
   );
 
-  const [inputTitle, setInputTitle] = useState(todo?.title || '');
-  const [inputContent, setInputContent] = useState(todo?.content || '');
+  const [inputTitle, setInputTitle] = useState(todo?.title || "");
+  const [inputContent, setInputContent] = useState(todo?.content || "");
 
   const handleChangeTitle = useCallback(
-    (e) => setInputTitle(e.target.value),
-    [],
+    (e: ChangeEvent<HTMLInputElement>) => setInputTitle(e.target.value),
+    []
   );
 
   const handleChangeContent = useCallback(
-    (e) => setInputContent(e.target.value),
-    [],
+    (e: ChangeEvent<HTMLTextAreaElement>) => setInputContent(e.target.value),
+    []
   );
 
   const handleUpdateTodo = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!!todo?.id && inputTitle !== '' && inputContent !== '') {
-        updateTodo(todo.id, inputTitle, inputContent);
+      if (!!todo?.id && inputTitle !== "" && inputContent !== "") {
+        handleUpdateTodo(todo.id, inputTitle, inputContent);
         navigate(NAVIGATION_PATH.TOP);
       }
     },
-    [navigate, todo?.id, inputTitle, inputContent, updateTodo],
+    [navigate, todo?.id, inputTitle, inputContent, handleUpdateTodo]
   );
 
   return {
@@ -469,23 +581,29 @@ export const useTodoEditTemplate = ({ originTodoList, updateTodo }) => {
 
 #### パターン4: 詳細表示テンプレート
 
-**場所**: `src/components/templates/TodoDetailTemplate/TodoDetailTemplate.jsx`
+**場所**: `src/components/templates/TodoDetailTemplate/TodoDetailTemplate.tsx`
 
-```javascript
+```typescript
+import { useParams } from "react-router";
+import { BaseLayout } from "../../organisms";
+import { InputForm, TextArea } from "../../atoms";
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import styles from "./style.module.css";
+
 export const TodoDetailTemplate = () => {
-  const { originTodoList } = useTodoContext();
+  const { originalTodoList } = useTodoContext();
   const { id } = useParams();
-  const todo = originTodoList.find((todo) => String(todo.id) === id);
+  const todo = originalTodoList.find((todo) => String(todo.id) === id);
 
   return (
-    <BaseLayout title={'TodoDetail'}>
+    <BaseLayout title={"TodoDetail"}>
       {!!todo && (
         <div className={styles.container}>
           <div className={styles.area}>
-            <InputForm disabled value={todo.title} placeholder={'Title'} />
+            <InputForm disabled value={todo.title} placeholder={"Title"} />
           </div>
           <div className={styles.area}>
-            <TextArea disabled value={todo.content} placeholder={'Content'} />
+            <TextArea disabled value={todo.content} placeholder={"Content"} />
           </div>
         </div>
       )}

@@ -31,8 +31,8 @@
 
 #### ステップ1: 定数定義
 
-```javascript
-// src/constants/navigation.js に追加
+```typescript
+// src/constants/navigation.ts に追加
 export const NAVIGATION_LIST = {
   // 既存...
   NEW_PAGE: `${BASE_PATH}/new-page/:id`, // パラメータが必要な場合
@@ -46,66 +46,72 @@ export const NAVIGATION_PATH = {
 
 #### ステップ2: Page作成
 
-```javascript
-// src/pages/NewPage/index.js
-export { NewPage } from './NewPage';
+```typescript
+// src/pages/NewPage/index.ts
+export { NewPage } from "./NewPage";
 
-// src/pages/NewPage/NewPage.jsx
-import { NewTemplate } from '../../components/templates';
+// src/pages/NewPage/NewPage.tsx
+import { NewTemplate } from "../../components/templates";
 
 export const NewPage = () => <NewTemplate />;
 ```
 
 #### ステップ3: Template作成
 
-```javascript
-// src/components/templates/NewTemplate/index.js
-export { NewTemplate } from './NewTemplate';
+```typescript
+// src/components/templates/NewTemplate/index.ts
+export { NewTemplate } from "./NewTemplate";
 
-// src/components/templates/NewTemplate/NewTemplate.jsx
-import { useTodoContext } from '../../../hooks/useTodoContext.js';
-import { BaseLayout } from '../../organisms';
-import { InputForm, CommonButton } from '../../atoms';
-import { useNewTemplate } from './useNewTemplate.js';
-import styles from './style.module.css';
+// src/components/templates/NewTemplate/NewTemplate.tsx
+import { useTodoContext } from "../../../hooks/useTodoContext";
+import { BaseLayout } from "../../organisms";
+import { InputForm, CommonButton } from "../../atoms";
+import { useNewTemplate } from "./useNewTemplate";
+import styles from "./style.module.css";
 
 export const NewTemplate = () => {
-  const { originTodoList, someCrudAction } = useTodoContext();
+  const { originalTodoList, someCrudAction } = useTodoContext();
   const {
     // 必要な状態とハンドラ
-  } = useNewTemplate({ originTodoList, someCrudAction });
+  } = useNewTemplate({ originalTodoList, someCrudAction });
 
-  return <BaseLayout title={'Page Title'}>{/* レイアウト実装 */}</BaseLayout>;
+  return <BaseLayout title={"Page Title"}>{/* レイアウト実装 */}</BaseLayout>;
 };
 ```
 
 #### ステップ4: Template専用フック作成
 
-```javascript
-// src/components/templates/NewTemplate/useNewTemplate.js
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { NAVIGATION_PATH } from '../../../constants/navigation';
+```typescript
+// src/components/templates/NewTemplate/useNewTemplate.ts
+import { useState, useCallback, useMemo, ChangeEvent } from "react";
+import { useNavigate, useParams } from "react-router";
+import { NAVIGATION_PATH } from "../../../constants/navigation";
+import { TodoType } from "../../../types/Todo";
 
-export const useNewTemplate = ({ originTodoList, someCrudAction }) => {
+type UseNewTemplateParams = {
+  originalTodoList: Array<TodoType>;
+  someCrudAction: (value: string) => void;
+};
+
+export const useNewTemplate = ({ originalTodoList, someCrudAction }: UseNewTemplateParams) => {
   const navigate = useNavigate();
   const { id } = useParams(); // 必要な場合
 
   // ローカル状態
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>("");
 
   // イベントハンドラ
-  const handleChange = useCallback((e) => setInputValue(e.target.value), []);
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value), []);
 
   const handleSubmit = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (inputValue !== '') {
+      if (inputValue !== "") {
         someCrudAction(inputValue);
         navigate(NAVIGATION_PATH.TOP);
       }
     },
-    [someCrudAction, inputValue, navigate],
+    [someCrudAction, inputValue, navigate]
   );
 
   return {
@@ -118,18 +124,18 @@ export const useNewTemplate = ({ originTodoList, someCrudAction }) => {
 
 #### ステップ5: Router追加
 
-```javascript
-// src/router/index.jsx に追加
-import { NewPage } from '../pages';
+```typescript
+// src/router/TodoRouter.tsx に追加
+import { NewPage } from "../pages";
 
 <Route path={NAVIGATION_LIST.NEW_PAGE} element={<NewPage />} />;
 ```
 
-#### ステップ6: pages/index.js 更新
+#### ステップ6: pages/index.ts 更新
 
-```javascript
-// src/pages/index.js
-export { NewPage } from './NewPage';
+```typescript
+// src/pages/index.ts
+export { NewPage } from "./NewPage";
 ```
 
 ### パターン2: 新規Atom追加
@@ -138,70 +144,77 @@ export { NewPage } from './NewPage';
 
 ```
 src/components/atoms/NewAtom/
-  ├── index.js
-  ├── NewAtom.jsx
+  ├── index.ts
+  ├── NewAtom.tsx
   └── style.module.css
 ```
 
 #### 実装
 
-```javascript
-// src/components/atoms/NewAtom/index.js
-export { NewAtom } from './NewAtom';
+```typescript
+// src/components/atoms/NewAtom/index.ts
+export { NewAtom } from "./NewAtom";
 
-// src/components/atoms/NewAtom/NewAtom.jsx
-import styles from './style.module.css';
+// src/components/atoms/NewAtom/NewAtom.tsx
+import { FC, ChangeEvent } from "react";
+import styles from "./style.module.css";
 
-export const NewAtom = ({ prop1, prop2, onChange }) => (
+type NewAtomProps = {
+  prop1: string;
+  prop2: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+export const NewAtom: FC<NewAtomProps> = ({ prop1, prop2, onChange }) => (
   <div className={styles.container}>{/* 実装 */}</div>
 );
 ```
 
-#### atoms/index.js 更新
+#### atoms/index.ts 更新
 
-```javascript
-// src/components/atoms/index.js
-export { NewAtom } from './NewAtom';
+```typescript
+// src/components/atoms/index.ts
+export { NewAtom } from "./NewAtom";
 ```
 
 ### パターン3: Context に新しいアクション追加
 
 #### ステップ1: useTodo にロジック追加
 
-```javascript
-// src/hooks/useTodo.js
+```typescript
+// src/hooks/useTodo.ts
 const newAction = useCallback(
-  (param1, param2) => {
+  (param1: string, param2: number) => {
     // ロジック実装
-    const updatedList = originTodoList.map(/* ... */);
-    setOriginTodoList(updatedList);
+    const updatedList = originalTodoList.map(/* ... */);
+    setOriginalTodoList(updatedList);
   },
-  [originTodoList],
+  [originalTodoList]
 );
 
 return {
-  originTodoList,
-  addTodo,
-  updateTodo,
-  deleteTodo,
+  originalTodoList,
+  handleCreateTodo,
+  handleUpdateTodo,
+  handleDeleteTodo,
   newAction, // 追加
 };
 ```
 
 #### ステップ2: TodoContext で提供
 
-```javascript
-// src/contexts/TodoContext.jsx
-const { originTodoList, addTodo, updateTodo, deleteTodo, newAction } =
+```typescript
+// src/contexts/TodoContext.tsx
+const { originalTodoList, handleCreateTodo, handleUpdateTodo, handleDeleteTodo, newAction } =
   useTodo();
 
 return (
   <TodoContext.Provider
     value={{
-      originTodoList,
-      addTodo,
-      updateTodo,
-      deleteTodo,
+      originalTodoList,
+      handleCreateTodo,
+      handleUpdateTodo,
+      handleDeleteTodo,
       newAction, // 追加
     }}
   >
