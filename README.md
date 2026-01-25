@@ -5,12 +5,14 @@
 ## プロジェクト構成
 
 ### 01-javascript-router
+
 - Context APIによる状態管理
 - React Router v7によるSPA実装
 - Atomic Designによるコンポーネント設計
 - JavaScript実装
 
 ### 02-typescript-migration
+
 - `01-javascript-router`をTypeScript化
 - 型安全性の向上
 - 同一機能をTypeScriptで実装
@@ -47,6 +49,7 @@ npm run dev
 ## プロジェクトの特徴
 
 ### Atomic Design
+
 - **Atoms**: 最小単位のUI部品（InputForm、CommonButtonなど）
 - **Molecules**: Atomsの組み合わせ（Navigationなど）
 - **Organisms**: 複合コンポーネント（BaseLayout、TodoListなど）
@@ -54,8 +57,9 @@ npm run dev
 - **Pages**: ルーティング単位のページ
 
 ### データフロー
+
 ```
-useTodo (状態管理) 
+useTodo (状態管理)
   → TodoContext (Context API)
   → Templates (ページ実装)
   → Template専用フック (ビジネスロジック)
@@ -64,6 +68,7 @@ useTodo (状態管理)
 ### 設計ドキュメント
 
 各プロジェクトの `/docs` フォルダに詳細なドキュメントを配置:
+
 - `01-ARCHITECTURE.md` - アーキテクチャ全体像
 - `02-DATA-FLOW.md` - データフロー設計
 - `03-ROUTING-STRATEGY.md` - ルーティング戦略
