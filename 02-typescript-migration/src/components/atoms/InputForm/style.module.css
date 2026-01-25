@@ -1,0 +1,15 @@
+.input {
+  /* flex: 1; 親要素がflexコンテナではないと無効 */
+  width: 100%;
+  box-sizing: border-box; /* パディングとボーダーを含めて幅を計算 */
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #4CAF50;
+}
