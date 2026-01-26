@@ -1,12 +1,25 @@
-import { createContext } from "react";
+import { createContext, ReactNode, FC } from "react";
 import { useTodo } from "../hooks/useTodo";
+import { TodoType } from "../types/Todo";
 
-// contextを作成する
-// 空のオブジェクトで初期化
-const TodoContext = createContext({});
+type TodoContextValueType = {
+  originalTodoList: Array<TodoType>;
+  // 関数の型シグネチャ 引数を受け取るが、戻り値は使わない
+  handleCreateTodo: (title: string, content: string) => void;
+  handleDeleteTodo: (targetId: number, targetTitle: string) => void;
+  handleUpdateTodo: (targetId: number, title: string, content: string) => void;
+};
+
+// 使う側でundefinedチェックが必要
+// → カスタムフックで解決
+const TodoContext = createContext<TodoContextValueType | undefined>(undefined);;
 
 // TodoContextをエクスポート（これのみ公開）
 export { TodoContext };
+
+type TodoProviderProps = {
+  children: ReactNode;
+};
 
 // childrenは<TodoTemplate />の中身
 /**
@@ -16,7 +29,8 @@ export { TodoContext };
  * @param {Object} props
  * @param {React.ReactNode} props.children - ラップするコンポーネント
  */
-export const TodoProvider = ({ children }) => {
+// Reactコンポーネントの明示性を高めるためにFCを使用
+export const TodoProvider: FC<TodoProviderProps> = ({ children }) => {
   // カスタムフックから状態と関数を取得し、Contextで提供する
   // リファクタリング後: CRUD操作のみを提供
   const {

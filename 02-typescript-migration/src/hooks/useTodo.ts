@@ -19,17 +19,18 @@ export const useTodo = () => {
    * @param {string} title - Todoのタイトル
    * @param {string} content - Todoの内容
    */
-  const handleCreateTodo = useCallback((title, content = "") => {
-    const nextId = uniqueId + 1;
-    
-    const newTodoList = [
-      ...originalTodoList,
-      {
-        id: nextId,
-        title,
-        content,
-      },
-    ];
+  const handleCreateTodo = useCallback(
+    (title: string, content: string = "") => {
+      const nextId = uniqueId + 1;
+      
+      const newTodoList = [
+        ...originalTodoList,
+        {
+          id: nextId,
+          title,
+          content,
+        },
+      ];
     
     setOriginalTodoList(newTodoList);
     setUniqueId(nextId);
@@ -40,16 +41,17 @@ export const useTodo = () => {
   * @param {number} targetId - 削除対象のTodoのID
   * @param {string} targetTitle - 削除対象のTodoのタイトル
   */
-  const handleDeleteTodo = useCallback((targetId, targetTitle) => {
-    // 確認ダイアログを表示
-    if (window.confirm(`「${targetTitle}」を削除しますか？`)) {
-      // 削除対象のID以外のTodoだけを残す
-      const newTodoList = originalTodoList.filter((todo) => todo.id !== targetId);
-      
-      // 状態を更新
-      setOriginalTodoList(newTodoList);
-    }
-  }, [originalTodoList]);
+  const handleDeleteTodo = useCallback(
+    (targetId: number, targetTitle: string) => {
+      // 確認ダイアログを表示
+      if (window.confirm(`「${targetTitle}」を削除しますか？`)) {
+        // 削除対象のID以外のTodoだけを残す
+        const newTodoList = originalTodoList.filter((todo) => todo.id !== targetId);
+        
+        // 状態を更新
+        setOriginalTodoList(newTodoList);
+      }
+    }, [originalTodoList]);
 
   /**
    * Todo更新処理
@@ -57,14 +59,15 @@ export const useTodo = () => {
    * @param {string} title - 新しいタイトル
    * @param {string} content - 新しい内容
    */
-  const handleUpdateTodo = useCallback((targetId, title, content) => {
-    const newTodoList = originalTodoList.map((todo) =>
-      todo.id === targetId
-        ? { ...todo, title, content }
-        : todo
-    );
-    setOriginalTodoList(newTodoList);
-  }, [originalTodoList]);
+  const handleUpdateTodo = useCallback(
+      (targetId: number, title: string, content: string) => {
+      const newTodoList = originalTodoList.map((todo) =>
+        todo.id === targetId
+          ? { ...todo, title, content }
+          : todo
+      );
+      setOriginalTodoList(newTodoList);
+    }, [originalTodoList]);
 
   return {
     originalTodoList, // データソース
