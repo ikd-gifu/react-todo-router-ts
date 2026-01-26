@@ -8,6 +8,7 @@ import { NAV_ITEMS } from '../../../constants/navigation';
  * フォーム入力の状態とバリデーション、送信処理を管理
  * ページを離れたら破棄される状態のみを扱う
  */
+// TODO useTodoCreateTemplate = (handleCreateTodo) => にリファクタリング検討
 export const useTodoCreateTemplate = () => {
   const navigate = useNavigate();
   const { handleCreateTodo } = useTodoContext();
