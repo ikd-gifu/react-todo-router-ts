@@ -10,6 +10,7 @@ import styles from "./style.module.css";
  * 
  * Top画面とTodo新規作成画面へのリンクボタンを提供
  */
+// propsを受け取らないので、型定義不要
 export const ButtonGroup = () => {
   return (
     // セマンティックHTML: ナビゲーションであることを明示

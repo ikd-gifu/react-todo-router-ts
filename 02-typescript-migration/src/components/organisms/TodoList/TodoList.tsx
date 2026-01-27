@@ -4,23 +4,28 @@ import { useNavigate } from "react-router";
 import { NAV_ITEMS } from "../../../constants/navigation";
 
 import styles from "./style.module.css";
+import { FC } from "react";
 
-export const TodoList = ({ todoList, handleDeleteTodo }) => {
+type TodoListProps = {
+  // 表示用のpropsのみ型を定義する
+  todoList: {id: number; title: string;}[];
+  handleDeleteTodo: (id: number, title: string) => void;
+};
+
+export const TodoList: FC<TodoListProps> = ({ todoList, handleDeleteTodo }) => {
   const navigate = useNavigate();
 
   /**
    * 詳細ページへの遷移処理
-   * @param {number} id - 遷移先TodoのID
    */
-  const handleNavigateToDetail = (id) => {
+  const handleNavigateToDetail = (id: number) => {
     navigate(`${NAV_ITEMS.DETAIL}${id}`);
   };
 
   /**
    * 編集ページへの遷移処理
-   * @param {number} id - 編集対象TodoのID
    */
-  const handleNavigateToEdit = (id) => {
+  const handleNavigateToEdit = (id: number) => {
     navigate(`${NAV_ITEMS.EDIT}${id}`);
   };
 
