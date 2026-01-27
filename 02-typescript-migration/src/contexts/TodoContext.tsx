@@ -10,6 +10,7 @@ type TodoContextValueType = {
   handleUpdateTodo: (targetId: number, title: string, content: string) => void;
 };
 
+// ProviderなしでContextを使うと即座にエラーになるようにundefined許容
 // 使う側でundefinedチェックが必要
 // → カスタムフックで解決
 const TodoContext = createContext<TodoContextValueType | undefined>(undefined);;
