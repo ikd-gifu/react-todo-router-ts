@@ -10,8 +10,9 @@ export default defineConfig({
   server: {
     port: 5174
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-  }
+  // 今回テストを実装しないためコメントアウト
+  // test: {
+  //   globals: true,
+  //   environment: 'jsdom',
+  // }
 })
