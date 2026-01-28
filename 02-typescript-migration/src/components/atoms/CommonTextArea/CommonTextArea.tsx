@@ -7,7 +7,7 @@ import { FC, ChangeEvent } from "react";
 type CommonTextAreaProps = {
   inputValue: string;
   placeholder: string;
-  handleChangeValue: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  handleChangeValue?: (e: ChangeEvent<HTMLTextAreaElement>) => void; // TodoDetailTemplateでの使用を考慮しオプショナルに
   rows?: number;
   disabled?: boolean;
 };

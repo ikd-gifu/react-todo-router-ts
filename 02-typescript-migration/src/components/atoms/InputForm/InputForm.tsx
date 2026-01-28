@@ -10,8 +10,8 @@ import { FC, ChangeEvent, KeyboardEvent } from "react";
 type InputFormProps = {
   inputValue: string;
   placeholder: string;
-  handleChangeValue: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
+  handleChangeValue?: (e: ChangeEvent<HTMLInputElement>) => void; // TodoDetailTemplateでの使用を考慮しオプショナルに
+  handleKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void; // 検索フォームではEnterキー処理が不要な場合もあるためオプショナルに
   disabled?: boolean;
 };
 

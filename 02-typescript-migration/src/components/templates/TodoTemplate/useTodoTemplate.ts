@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, ChangeEvent } from "react";
 import { useTodoContext } from "../../../hooks/useTodoContext";
 // import { TodoType } from "../../../types/Todo"; --- 型推論が機能しているため不要
 
@@ -19,10 +19,10 @@ export const useTodoTemplate = () => {
 
   /**
    * 検索キーワード更新処理
-   * @param {Event} e - 入力イベント
+   * @param {ChangeEvent<HTMLInputElement>} e - 入力イベント
    */
   const onChangeSearchInputValue = useCallback(
-    (e) => setSearchInputValue(e.target.value),
+    (e: ChangeEvent<HTMLInputElement>) => setSearchInputValue(e.target.value),
     []
   );
 
