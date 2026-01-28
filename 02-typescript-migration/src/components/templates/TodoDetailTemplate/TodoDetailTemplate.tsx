@@ -16,6 +16,15 @@ export const TodoDetailTemplate = () => {
   // 計算コストが低いのでuseMemoは不要
   const todo = originalTodoList.find((todo) => todo.id === Number(id));
 
+  if (!todo) {
+    return (
+      <BasicLayout title="Todo詳細">
+        <div>指定されたTodoは存在しません。</div>
+      </BasicLayout>
+    )
+  }
+
+  // ここ以降は todo が TodoType 型と確定している
   return (
     <BasicLayout title="Todo詳細">
       <div className={styles.detailContainer}>

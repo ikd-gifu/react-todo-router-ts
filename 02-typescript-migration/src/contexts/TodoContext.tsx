@@ -11,9 +11,9 @@ type TodoContextValueType = {
 };
 
 // ProviderなしでContextを使うと即座にエラーになるようにundefined許容
-// 使う側でundefinedチェックが必要
-// → カスタムフックで解決
-const TodoContext = createContext<TodoContextValueType | undefined>(undefined);;
+// 使う側でundefinedチェックが必要→ カスタムフックで解決
+// ジェネリック型を宣言
+const TodoContext = createContext<TodoContextValueType | undefined>(undefined);
 
 // TodoContextをエクスポート（これのみ公開）
 export { TodoContext };
@@ -42,7 +42,8 @@ export const TodoProvider: FC<TodoProviderProps> = ({ children }) => {
   } = useTodo();
 
   return (
-    // <TodoTemplate /> がレンダリングされる
+    // value propsに実際のオブジェクトを渡す
+    // TSがvalueをTodoContextValueTypeと照合して型チェックする
     <TodoContext.Provider
       value={{
         originalTodoList, // データソース
