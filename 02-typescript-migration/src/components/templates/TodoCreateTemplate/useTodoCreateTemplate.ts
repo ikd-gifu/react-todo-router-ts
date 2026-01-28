@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { NAV_ITEMS } from '../../../constants/navigation';
@@ -21,17 +21,17 @@ export const useTodoCreateTemplate = () => {
   // UIハンドラーをtemplateから移動
   /**
    * title変更処理
-   * @param {Event} e - 入力イベント
+   * @param {ChangeEvent<HTMLInputElement>} e - 入力イベント
    */
-  const onChangeTitle = useCallback((e) => {
+  const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   }, []);
 
   /**
    * content変更処理
-   * @param {Event} e - 入力イベント
+   * @param {ChangeEvent<HTMLTextAreaElement>} e - 入力イベント
    */
-  const onChangeContent = useCallback((e) => {
+  const onChangeContent = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   }, []);
 

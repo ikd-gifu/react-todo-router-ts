@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, ChangeEvent } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { NAV_ITEMS } from '../../../constants/navigation';
@@ -24,23 +24,24 @@ export const useTodoEditTemplate = () => {
   // UIハンドラーをtemplateから移動
   /**
    * title変更処理
-   * @param {Event} e - 入力イベント
+   * @param {ChangeEvent<HTMLInputElement>} e - 入力イベント
    */
-  const onChangeTitle = useCallback((e) => {
+  const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   }, []);
 
   /**
    * content変更処理
-   * @param {Event} e - 入力イベント
+   * @param {ChangeEvent<HTMLTextAreaElement>} e - 入力イベント
    */
-  const onChangeContent = useCallback((e) => {
+  const onChangeContent = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   }, []);
 
   /**
    * Todo更新処理
    */
+  // <form>を使わないのでe: FormEventなど不要
   const onClickUpdate = useCallback(() => {
     if (todo && title !== '') {
       handleUpdateTodo(todo.id, title, content);
