@@ -1,0 +1,87 @@
+.container {
+  margin-top: 20px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.emptyMessage {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+}
+
+.list {
+  padding: 0;
+}
+
+.todo {
+  display: flex; /* 追加: 横並びにする */
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  list-style: none;
+  line-height: 1.5;
+  font-weight: bold;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  height: 50px;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.task {
+  cursor: pointer;
+  padding-left: 10px;
+  color: #333;
+  font-size: 1.3rem;
+  flex: 1; /* 残りのスペース全体を使う */
+}
+
+/* アイコングループ */
+.iconGroup {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* 各アイコン共通スタイル */
+.icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+
+/* 詳細アイコン - 青 */
+.icon:nth-child(1) {
+  color: #007bff;
+}
+
+/* 編集アイコン - 緑 */
+.icon:nth-child(2) {
+  color: #28a745;
+}
+
+/* 削除アイコン - 赤 */
+.icon:nth-child(3) {
+  color: #f83702;
+}

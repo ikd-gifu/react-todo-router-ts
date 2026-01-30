@@ -1,0 +1,17 @@
+.linkButton {
+  width: 120px;
+  padding: 10px 20px;
+  border: 2px solid #4a90e2;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #4a90e2;
+  color: white;
+}
+
+.linkButton:hover {
+  background-color: #357abd;
+  border-color: #357abd;
+}

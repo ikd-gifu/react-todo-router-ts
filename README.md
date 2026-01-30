@@ -17,6 +17,13 @@
 - 型安全性の向上
 - 同一機能をTypeScriptで実装
 
+### 03-react-hook-form-and-zod
+
+- `02-typescript-migration`をベースに実装
+- React Hook Formによる宣言的フォーム管理
+- Zodによるスキーマバリデーション
+- TypeScript + バリデーションの型安全性
+
 ## 使用技術
 
 - **React**: 19.2.0
@@ -26,11 +33,15 @@
 - **Context API**: グローバル状態管理
 - **CSS Modules**: スコープ付きスタイリング
 - **Vitest**: テストフレームワーク
+- **React Hook Form**: ^7.71.1
+- **Zod**: ^4.3.6
+- **@hookform/resolvers**: ^5.2.2 (ZodとReact Hook Formの統合)
 
 ## 学習の流れ
 
 1. **01-javascript-router**: Context API + React Router v7の基礎実装
 2. **02-typescript-migration**: JavaScript → TypeScript 移行経験
+3. **03-react-hook-form-and-zod**: React Hook Form + Zod によるモダンなフォーム管理
 
 ## セットアップ
 
@@ -42,6 +53,11 @@ npm run dev
 
 # 02-typescript-migrationのセットアップ
 cd 02-typescript-migration
+npm install
+npm run dev
+
+# 03-react-hook-form-and-zodのセットアップ
+cd 03-react-hook-form-and-zod
 npm install
 npm run dev
 ```

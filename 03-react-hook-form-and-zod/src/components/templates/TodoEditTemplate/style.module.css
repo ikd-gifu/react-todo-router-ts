@@ -1,0 +1,23 @@
+.formGroup {
+  width: 80%;
+  margin: 0 auto 20px auto;
+}
+
+.buttonGroup {
+  width: 80%;
+  margin: 24px auto 0 auto;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.notFound {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.notFound p {
+  font-size: 1.2rem;
+  color: #999;
+  margin-bottom: 30px;
+}

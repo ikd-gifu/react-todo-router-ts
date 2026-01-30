@@ -1,0 +1,16 @@
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+  resize: vertical; /* 縦方向のみリサイズ可能 */
+  font-family: inherit; /* フォントを親要素から継承 */
+}
+
+.textarea:focus {
+  border-color: #4CAF50;
+}

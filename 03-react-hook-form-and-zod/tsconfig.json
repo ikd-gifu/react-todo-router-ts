@@ -1,0 +1,8 @@
+// tsconfig.app.json（ブラウザ環境）とtsconfig.app.json（ブラウザ環境）を統合
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

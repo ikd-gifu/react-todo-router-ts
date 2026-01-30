@@ -1,0 +1,14 @@
+.buttonGroup {
+  margin: 20px 0;
+}
+
+.list {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  /* Flexboxの子要素の周囲に均等な余白を配置します。 */
+  justify-content: space-around;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
