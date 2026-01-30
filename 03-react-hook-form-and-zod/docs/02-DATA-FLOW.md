@@ -61,7 +61,12 @@ type TodoContextType = {
 **使い方**:
 
 ```typescript
-const { originalTodoList, handleCreateTodo, handleUpdateTodo, handleDeleteTodo } = useTodoContext();
+const {
+  originalTodoList,
+  handleCreateTodo,
+  handleUpdateTodo,
+  handleDeleteTodo,
+} = useTodoContext();
 ```
 
 ### 4. テンプレートでの状態利用

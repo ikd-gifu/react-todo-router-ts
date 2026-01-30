@@ -158,7 +158,7 @@ const handleCreateTodo = useCallback(
       navigate(NAVIGATION_PATH.TOP); // 作成後トップへ
     }
   },
-  [handleCreateTodo, inputTitle, inputContent, navigate]
+  [handleCreateTodo, inputTitle, inputContent, navigate],
 );
 ```
 
@@ -174,12 +174,12 @@ const navigate = useNavigate();
 
 const handleMoveDetailPage = useCallback(
   (id: number) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
-  [navigate]
+  [navigate],
 );
 
 const handleMoveEditPage = useCallback(
   (id: number) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
-  [navigate]
+  [navigate],
 );
 ```
 
@@ -213,7 +213,7 @@ import { useMemo } from "react";
 const { id } = useParams();
 const todo = useMemo(
   () => originalTodoList.find((todo) => String(todo.id) === id),
-  [id, originalTodoList]
+  [id, originalTodoList],
 );
 ```
 
@@ -236,13 +236,13 @@ navigate(NAVIGATION_PATH.TOP);
 ❌ **悪い例**:
 
 ```typescript
-navigate("/react-output-router-ts-v2/"); // ハードコーディング
+navigate("/react-hook-form-and-zod/"); // ハードコーディング
 ```
 
 ### 2. BASE_PATHの活用
 
 ```typescript
-export const BASE_PATH = "/react-output-router-ts-v2";
+export const BASE_PATH = "/react-hook-form-and-zod";
 ```
 
 - デプロイ先に応じて一箇所変更するだけで全体に反映
@@ -261,7 +261,7 @@ todo.id == id; // ❌ 暗黙的な型変換に依存
 ```typescript
 const todo = useMemo(
   () => originalTodoList.find((todo) => String(todo.id) === id),
-  [id, originalTodoList]
+  [id, originalTodoList],
 );
 ```
 
@@ -273,7 +273,7 @@ const todo = useMemo(
 ```typescript
 const handleMoveDetailPage = useCallback(
   (id: number) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
-  [navigate]
+  [navigate],
 );
 ```
 
