@@ -5,9 +5,12 @@ import styles from "./style.module.css";
 import { FC, ChangeEvent } from "react";
 
 type CommonTextAreaProps = {
+  // 制御コンポーネントなので、valueを常にstringで受け取る
+  // undefined許容: valueが渡らない可能性 → 非制御コンポーネントになるため避ける
   inputValue: string;
   placeholder: string;
   handleChangeValue?: (e: ChangeEvent<HTMLTextAreaElement>) => void; // TodoDetailTemplateでの使用を考慮しオプショナルに
+  // 任意の設定なので、?で問題ない
   rows?: number;
   disabled?: boolean;
 };

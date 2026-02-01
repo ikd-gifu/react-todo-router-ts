@@ -20,7 +20,8 @@ export const useTodo = () => {
    * @param {string} content - Todoの内容
    */
   const handleCreateTodo = useCallback(
-    (title: string, content: string = "") => {
+    // default値はuseTodoCreateTemplateのuseFormで設定
+    (title: string, content?: string) => {
       const nextId = uniqueId + 1;
       
       const newTodoList = [
@@ -28,7 +29,8 @@ export const useTodo = () => {
         {
           id: nextId,
           title,
-          content,
+          // undefinedを空文字に変換して、常にstringを入力
+          content: content ?? "",
         },
       ];
     
