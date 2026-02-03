@@ -1,7 +1,7 @@
 import { Controller } from 'react-hook-form';
 import { useTodoCreateTemplate } from './useTodoCreateTemplate';
-import { CommonTextArea, CommonButton } from '../../atoms';
-import { InputFormValidation } from '../../molecules/InputFormValidation/InputFormValidation';
+import { CommonButton } from '../../atoms';
+import { InputFormValidation, TextAreaValidation } from '../../molecules';
 import { BasicLayout } from '../../organisms';
 import styles from './style.module.css';
 
@@ -47,7 +47,7 @@ export const TodoCreateTemplate = () => {
             control={control}
             name="content"
             render={({ field }) => (
-              <CommonTextArea
+              <TextAreaValidation
               // undefinedを空文字に変換して渡す
               // CommonTextAreaのProps契約に合わせ、stringを必ず渡すため
                 inputValue={field.value ?? ""}

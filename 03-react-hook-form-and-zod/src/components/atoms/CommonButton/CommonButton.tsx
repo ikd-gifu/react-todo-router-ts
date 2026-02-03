@@ -2,7 +2,7 @@
 // Atomic Design の原則（Atoms は純粋なUI）
 // 状態を親で一元管理
 import styles from "./style.module.css";
-import { FC, ReactNode, MouseEvent, ComponentProps } from "react";
+import { FC, ReactNode, ComponentProps } from "react";
 
 // HTMLボタンの標準Props（disabled, type, onClickなど）を網羅
 // type="submit"でもonClick必須にならないようにする
