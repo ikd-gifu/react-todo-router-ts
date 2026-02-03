@@ -21,10 +21,14 @@ export const TodoCreateTemplate = () => {
     <BasicLayout title="Todo新規作成">
       <form className={styles.formGroup} onSubmit={handleCreateSubmit}>
         <div className={styles.formGroup}>
+          {/* name="title" を内部ストアに紐づけ、field を生成しInputFormValidationに渡す */}
+          {/* fieldを用いて、DOMをRHFの内部状態に接続 fieldはController が render に渡す RHF由来のオブジェクト */}
           <Controller
             control={control}
             name="title"
             render={({ field }) => (
+              // field の中身を別々のpropsとして展開して渡す
+              // field は 最初から value / onChange / onBlur / name / ref などを持つ
               <InputFormValidation
                 inputValue={field.value}
                 placeholder="タイトルを入力"

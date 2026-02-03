@@ -10,6 +10,7 @@ type InputFormValidationProps = ComponentProps<typeof InputForm> & {
   errorMessage?: string;
 };
 
+// propsとしてController由来のfieldのプロパティを受け取る
 export const InputFormValidation: FC<InputFormValidationProps> = (props) => (
   // FC の戻り値は ReactElement | null なので、void ではなく JSX を返している
   // propsにhandleChangeValueを含む

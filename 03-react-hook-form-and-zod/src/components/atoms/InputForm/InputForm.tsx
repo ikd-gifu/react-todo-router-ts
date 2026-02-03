@@ -5,6 +5,8 @@ import styles from "./style.module.css";
 import { FC, ChangeEvent, KeyboardEvent } from "react";
 
 // 移行する手間がかかるので、今回は使わない
+// value / onChange / placeholder などが 任意 扱いになる
+// zodで入力時のバリデーションとuseTodoCreateTemplateを呼び出す際の引数で型を担保しているため、inputを利用しても問題ない
 // type InputFormProps = ComponentProps<"input">;
 
 type InputFormProps = {

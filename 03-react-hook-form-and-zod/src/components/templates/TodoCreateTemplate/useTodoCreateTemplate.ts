@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+// オブジェクトスキーマを定義
 const TodoCreateFormSchema = z.object({
   title: 
     z
@@ -36,7 +37,7 @@ export const useTodoCreateTemplate = () => {
     control, // コンポーネントを登録するためのメソッドを含む
     handleSubmit, // フォームの検証が成功した場合にフォーム データを送信するための関数
     formState: { errors }, // フォーム全体の状態に関する情報を含む フィールドエラーを持つオブジェクト
-  } = useForm<TodoCreateFormValues>({
+  } = useForm<TodoCreateFormValues>({ // useFormがフォーム状態を管理する型を指定
     resolver: zodResolver(TodoCreateFormSchema), // Zodの検証をRHFに統合
     defaultValues: {
       title: '',

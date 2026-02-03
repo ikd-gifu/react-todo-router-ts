@@ -30,6 +30,7 @@ export const useTodo = () => {
           id: nextId,
           title,
           // undefinedを空文字に変換して、常にstringを入力
+          // TodoTypeの型契約に合わせる（contentは必須でstring型）
           content: content ?? "",
         },
       ];
