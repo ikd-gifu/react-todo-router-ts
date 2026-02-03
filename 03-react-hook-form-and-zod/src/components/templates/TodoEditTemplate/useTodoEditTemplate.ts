@@ -2,6 +2,25 @@ import { useState, useCallback, ChangeEvent } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { NAV_ITEMS } from '../../../constants/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// オブジェクトスキーマを定義
+const TodoEditFormSchema = z.object({
+  title: 
+    z
+    .string()
+    .min(1, { message: 'タイトルは必須です' })
+    .max(20, { message: 'タイトルは20文字以内で入力してください' }),
+  content:
+    z
+    .string()
+    .optional(),
+});
+
+// 型をスキーマから拡張するためにz.inferを使用して型エイリアスを定義
+type TodoEditFormSchema = z.infer<typeof TodoEditFormSchema>;
 
 /**
  * Todo編集テンプレート用のカスタムフック
@@ -15,46 +34,38 @@ export const useTodoEditTemplate = () => {
   // URLパラメータのidに一致するTodoを取得
   const todo = originalTodoList.find((todo) => todo.id === Number(id));
 
-  // フォームの状態管理（todoの初期値を直接設定）
-  const [title, setTitle] = useState(todo?.title || '');
-  const [content, setContent] = useState(todo?.content || '');
-
-  // タイトル入力フィールドの状態管理、内容入力フィールドの状態管理
-  // フォーム送信とTodoの実際の変更処理を分離
-  // UIハンドラーをtemplateから移動
-  /**
-   * title変更処理
-   * @param {ChangeEvent<HTMLInputElement>} e - 入力イベント
-   */
-  const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  }, []);
-
-  /**
-   * content変更処理
-   * @param {ChangeEvent<HTMLTextAreaElement>} e - 入力イベント
-   */
-  const onChangeContent = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  }, []);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TodoEditFormSchema>({
+    resolver: zodResolver(TodoEditFormSchema),
+    defaultValues: {
+      title: todo?.title,
+      content: todo?.content,
+    }
+  });
 
   /**
    * Todo更新処理
    */
   // <form>を使わないのでe: FormEventなど不要
-  const onClickUpdate = useCallback(() => {
-    if (todo && title !== '') {
-      handleUpdateTodo(todo.id, title, content);
-      navigate(NAV_ITEMS.TOP);
-    }
-  }, [todo, title, content, handleUpdateTodo, navigate]);
+  const handleEditSubmit = handleSubmit(
+    useCallback(
+      (values: TodoEditFormSchema) => {
+        if (todo && values.title !== '') {
+          handleUpdateTodo(todo.id, values.title, values.content ?? "");
+          navigate(NAV_ITEMS.TOP);
+        }
+        },
+        [todo, handleUpdateTodo, navigate]
+      )
+  );
 
   return {
     todo,
-    title,
-    content,
-    onChangeTitle,
-    onChangeContent,
-    onClickUpdate,
+    control,
+    errors,
+    handleEditSubmit,
   };
 };

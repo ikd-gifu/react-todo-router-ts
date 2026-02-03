@@ -1,5 +1,7 @@
+import { Controller } from 'react-hook-form';
 import { useTodoEditTemplate } from './useTodoEditTemplate';
-import { InputForm, CommonTextArea, CommonButton } from '../../atoms';
+import { CommonButton } from '../../atoms';
+import { InputFormValidation, TextAreaValidation } from '../../molecules';
 import { BasicLayout } from '../../organisms';
 import styles from './style.module.css';
 
@@ -11,11 +13,9 @@ export const TodoEditTemplate = () => {
   // カスタムフックでTodoデータ、フォーム状態、更新処理を取得
   const {
     todo,
-    title,
-    content,
-    onChangeTitle,
-    onChangeContent,
-    onClickUpdate,
+    control,
+    errors,
+    handleEditSubmit,
   } = useTodoEditTemplate();
 
   // Todoが存在しない場合の表示
@@ -31,28 +31,43 @@ export const TodoEditTemplate = () => {
 
   return (
     <BasicLayout title="Todo編集">
-      <div className={styles.formGroup}>
-        <InputForm
-          inputValue={title}
-          placeholder="タイトルを入力"
-          handleChangeValue={onChangeTitle}
-        />
-      </div>
+      <form className={styles.formGroup} onSubmit={handleEditSubmit}>
+        <div className={styles.formGroup}>
+          <Controller
+            control={control}
+            name="title"
+            render={({ field }) => 
+              <InputFormValidation
+                inputValue={field.value}
+                placeholder="タイトルを入力"
+                handleChangeValue={field.onChange}
+                errorMessage={errors.title?.message}
+              />
+            }
+          />
+        </div>
 
-      <div className={styles.formGroup}>
-        <CommonTextArea
-          inputValue={content}
-          placeholder="詳細な内容を入力（任意）"
-          handleChangeValue={onChangeContent}
-          rows={5}
-        />
-      </div>
+        <div className={styles.formGroup}>
+          <Controller
+            control={control}
+            name="content"
+            render={({ field }) =>
+              <TextAreaValidation
+                inputValue={field.value ?? ""}
+                placeholder="詳細な内容を入力（任意）"
+                handleChangeValue={field.onChange}
+                rows={5}
+              />
+            }
+          />
+        </div>
 
-      <div className={styles.buttonGroup}>
-        <CommonButton onClick={onClickUpdate}>
-          更新
-        </CommonButton>
-      </div>
+        <div className={styles.buttonGroup}>
+          <CommonButton type="submit">
+            更新
+          </CommonButton>
+        </div>
+      </form>
     </BasicLayout>
   );
 };
