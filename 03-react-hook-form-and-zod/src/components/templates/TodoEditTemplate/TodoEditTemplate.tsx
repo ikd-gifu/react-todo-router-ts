@@ -35,10 +35,12 @@ export const TodoEditTemplate = () => {
         <div className={styles.formGroup}>
           <Controller
             control={control}
+            // RHFが値を紐づけるために、nameはuseTodoEditTemplateのschemaのキーと一致させる必要がある
             name="title"
             render={({ field }) => 
               <InputFormValidation
-                inputValue={field.value}
+              // string 前提なので、?? "" を入れて 非制御→制御の警告回避
+                inputValue={field.value ?? ""}
                 placeholder="タイトルを入力"
                 handleChangeValue={field.onChange}
                 errorMessage={errors.title?.message}

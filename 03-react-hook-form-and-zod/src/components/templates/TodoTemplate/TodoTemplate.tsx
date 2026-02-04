@@ -2,8 +2,9 @@
 // Container/Presentational パターンとも呼ばれる
 import styles from "./style.module.css";
 import { BasicLayout, TodoList } from "../../organisms/";
-import { InputForm } from "../../atoms";
+import { InputFormValidation } from "../../molecules";
 import { useTodoTemplate } from "./useTodoTemplate";
+import { Controller } from "react-hook-form";
 
 /**
  * TodoTemplate
@@ -13,20 +14,25 @@ import { useTodoTemplate } from "./useTodoTemplate";
 export const TodoTemplate = () => {
   // ページ固有のカスタムフックでUI状態とロジックを管理
   const {
-    searchInputValue,
+    control,
     showTodoList,
     handleDeleteTodo,
-    onChangeSearchInputValue,
   } = useTodoTemplate();
 
   return (
     <BasicLayout title="Todo アプリ">
       {/* Todo検索フォームエリア */}
       <section className={styles.common}>
-        <InputForm
-          inputValue={searchInputValue}
-          placeholder="TODOを検索"
-          handleChangeValue={onChangeSearchInputValue}
+        <Controller
+          control={control}
+          name="search"
+          render={({ field }) => (
+            <InputFormValidation
+              inputValue={field.value ?? ""}
+              placeholder="TODOを検索"
+              handleChangeValue={field.onChange}
+            />
+          )}
         />
       </section>
       {/* Todoリスト一覧表示 */}

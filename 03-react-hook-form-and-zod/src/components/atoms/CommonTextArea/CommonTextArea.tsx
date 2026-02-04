@@ -19,6 +19,9 @@ type CommonTextAreaProps = {
  * テキストエリアコンポーネント
  * Atomic Designのatoms層 - 状態を持たず、純粋なUIとして実装
  */
+// TodoCreateTemplateやTodoEditTemplateでControllerのfieldから受け取ったpropsを渡す
+// Controllerのfieldのpropsはvalue / onChange / onBlur / name / ref などを持つので、これをそのまま渡すと型が合わない
+// TODO: propsをfieldのpropsに合わせる
 export const CommonTextArea: FC<CommonTextAreaProps> = ({
   inputValue,
   placeholder,

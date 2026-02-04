@@ -1,10 +1,20 @@
-import { useState, useMemo, useCallback, ChangeEvent } from "react";
+import { useMemo } from "react";
 import { useTodoContext } from "../../../hooks/useTodoContext";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useWatch } from "react-hook-form";
 // import { TodoType } from "../../../types/Todo"; --- 型推論が機能しているため不要
 
-// type UseTodoTemplateParams = {
-//   originalTodoList: Array<TodoType>;
-// }
+// defaultValuesで""を使うため、string型で定義 optionalは不要
+// react-hook-formはフィールド名で値を紐づけるため、
+// schemaのキーはdefaultValues・Controllerのnameは
+// 同じキー（search）で揃える必要がある
+const SearchFormSchema = z.object({
+  search: z.string(),
+});
+
+type SearchFormFormValue = z.infer<typeof SearchFormSchema>;
+
 /**
  * TodoTemplateのページ固有UI状態管理
  * 検索機能など、表示・操作に関わる一時的な状態を管理
@@ -13,18 +23,17 @@ import { useTodoContext } from "../../../hooks/useTodoContext";
 export const useTodoTemplate = () => {
   // 型推論が機能: originalTodoListがArray<TodoType>と正しく推論される
   const { originalTodoList, handleDeleteTodo } = useTodoContext();
-  
-  // 検索用のキーワードの状態管理（初期値は空文字）
-  const [searchInputValue, setSearchInputValue] = useState("");
 
-  /**
-   * 検索キーワード更新処理
-   * @param {ChangeEvent<HTMLInputElement>} e - 入力イベント
-   */
-  const onChangeSearchInputValue = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => setSearchInputValue(e.target.value),
-    []
-  );
+  const {
+    control,
+  } = useForm<SearchFormFormValue>({
+    resolver: zodResolver(SearchFormSchema),
+    defaultValues: {
+      search: "",
+    },
+  });
+
+  const searchInputValue = useWatch({ control, name: "search" }) ?? "";
 
   // 検索キーワードに基づいて表示するTodoリストを絞り込む
   // useMemoで派生状態を最適化
@@ -37,9 +46,8 @@ export const useTodoTemplate = () => {
   }, [originalTodoList, searchInputValue]);
 
   return {
-    searchInputValue,
+    control,
     showTodoList,
     handleDeleteTodo,
-    onChangeSearchInputValue,
   };
 };

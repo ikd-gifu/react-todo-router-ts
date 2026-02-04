@@ -1,4 +1,4 @@
-import { useState, useCallback, ChangeEvent } from 'react';
+import { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useTodoContext } from '../../../hooks/useTodoContext';
 import { NAV_ITEMS } from '../../../constants/navigation';
@@ -20,6 +20,10 @@ const TodoEditFormSchema = z.object({
 });
 
 // 型をスキーマから拡張するためにz.inferを使用して型エイリアスを定義
+// z.infer<typeof schema> にすると、schema から型を
+// 自動生成できるため「型定義」と「バリデーション」
+// を同じ schema に集約できます。
+// 結果として型の二重管理やズレを防げます。
 type TodoEditFormSchema = z.infer<typeof TodoEditFormSchema>;
 
 /**
@@ -38,11 +42,13 @@ export const useTodoEditTemplate = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<TodoEditFormSchema>({
+  } = useForm<TodoEditFormSchema>({ // フォーム全体の状態管理と操作APIを提供するフック
     resolver: zodResolver(TodoEditFormSchema),
+    // todo 未取得時でも string を保証するために ?? "" 
+    // を使用することで、非制御→制御コンポーネントの警告を防ぐ
     defaultValues: {
-      title: todo?.title,
-      content: todo?.content,
+      title: todo?.title ?? "",
+      content: todo?.content ?? "",
     }
   });
 
